@@ -1,651 +1,396 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>A股选股助手</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        :root {
-            --bg: #f5f5f7;
-            --card-bg: #ffffff;
-            --primary: #1677ff;
-            --primary-dark: #0958d9;
-            --red: #ff4d4f;
-            --green: #52c41a;
-            --text: #1a1a1a;
-            --text-secondary: #8c8c8c;
-            --border: #f0f0f0;
-            --shadow: 0 2px 12px rgba(0,0,0,0.06);
-            --radius: 14px;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            padding-bottom: env(safe-area-inset-bottom, 20px);
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 0 16px;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 40px 0 24px;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            margin-bottom: 6px;
-        }
-
-        .header p {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        /* Start Button */
-        .start-section {
-            text-align: center;
-            padding: 20px 0 32px;
-        }
-
-        .btn-start {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            max-width: 320px;
-            height: 56px;
-            background: linear-gradient(135deg, var(--primary), #4096ff);
-            color: #fff;
-            font-size: 18px;
-            font-weight: 600;
-            border: none;
-            border-radius: var(--radius);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 16px rgba(22, 119, 255, 0.3);
-        }
-
-        .btn-start:active {
-            transform: scale(0.97);
-            box-shadow: 0 2px 8px rgba(22, 119, 255, 0.2);
-        }
-
-        .btn-start:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .btn-start .icon {
-            font-size: 20px;
-        }
-
-        /* Loading */
-        .loading-section {
-            display: none;
-            text-align: center;
-            padding: 48px 0;
-        }
-
-        .loading-section.active {
-            display: block;
-        }
-
-        .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 15px;
-            color: var(--text-secondary);
-            line-height: 1.8;
-        }
-
-        .loading-text .step {
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .loading-text .step.active {
-            opacity: 1;
-        }
-
-        /* Results */
-        .results-section {
-            display: none;
-            padding-bottom: 40px;
-        }
-
-        .results-section.active {
-            display: block;
-            animation: fadeIn 0.4s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .results-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-            padding: 0 4px;
-        }
-
-        .results-header h2 {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .results-header .badge {
-            font-size: 12px;
-            color: var(--text-secondary);
-            background: var(--card-bg);
-            padding: 4px 10px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-        }
-
-        /* Win Rate Banner */
-        .winrate-banner {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: linear-gradient(135deg, #fff7e6, #fffbe6);
-            border: 1px solid #ffe7ba;
-            border-radius: var(--radius);
-            padding: 14px 16px;
-            margin-bottom: 16px;
-        }
-
-        .winrate-banner .icon {
-            font-size: 28px;
-        }
-
-        .winrate-banner .info {
-            flex: 1;
-        }
-
-        .winrate-banner .label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 2px;
-        }
-
-        .winrate-banner .value {
-            font-size: 16px;
-            font-weight: 700;
-            color: #d48806;
-        }
-
-        /* Stock Card */
-        .stock-card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 18px 16px;
-            margin-bottom: 12px;
-            box-shadow: var(--shadow);
-            transition: transform 0.15s;
-        }
-
-        .stock-card:active {
-            transform: scale(0.98);
-        }
-
-        .stock-card .top-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 14px;
-        }
-
-        .stock-card .name-block {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .stock-card .rank {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 700;
-            color: #fff;
-            background: var(--text-secondary);
-        }
-
-        .stock-card .rank.rank-1 { background: #fa8c16; }
-        .stock-card .rank.rank-2 { background: #faad14; }
-        .stock-card .rank.rank-3 { background: #d48806; }
-
-        .stock-card .name {
-            font-size: 17px;
-            font-weight: 600;
-        }
-
-        .stock-card .code {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 2px;
-        }
-
-        .stock-card .price-block {
-            text-align: right;
-        }
-
-        .stock-card .price {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--red);
-        }
-
-        .stock-card .hand-cost {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 2px;
-        }
-
-        .stock-card .metrics {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-
-        .metric {
-            text-align: center;
-            background: #fafafa;
-            border-radius: 10px;
-            padding: 10px 4px;
-        }
-
-        .metric .label {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-
-        .metric .value {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .metric .value.up { color: var(--red); }
-        .metric .value.down { color: var(--green); }
-
-        .stock-card .reasons {
-            background: #f6f8fa;
-            border-radius: 10px;
-            padding: 10px 12px;
-        }
-
-        .stock-card .reasons-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-        }
-
-        .stock-card .reasons-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .reason-tag {
-            font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 6px;
-            background: #e6f4ff;
-            color: var(--primary);
-            white-space: nowrap;
-        }
-
-        /* Score Bar */
-        .score-bar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-
-        .score-bar .score-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-        }
-
-        .score-bar .bar {
-            flex: 1;
-            height: 6px;
-            background: #f0f0f0;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .score-bar .fill {
-            height: 100%;
-            border-radius: 3px;
-            background: linear-gradient(90deg, #52c41a, #faad14, var(--red));
-            transition: width 0.6s ease;
-        }
-
-        .score-bar .score-value {
-            font-size: 14px;
-            font-weight: 700;
-            min-width: 28px;
-            text-align: right;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 24px 16px 40px;
-        }
-
-        .footer .disclaimer {
-            font-size: 12px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .footer .update-time {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 8px;
-        }
-
-        .btn-restart {
-            margin-top: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 24px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 22px;
-            font-size: 14px;
-            color: var(--text);
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            transition: all 0.2s;
-        }
-
-        .btn-restart:active {
-            transform: scale(0.97);
-        }
-
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 48px 0;
-            color: var(--text-secondary);
-        }
-
-        .empty-state .icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>A股选股助手</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#f5f5f7;--card:#fff;--primary:#1677ff;--red:#ff4d4f;--green:#52c41a;--text:#1a1a1a;--sub:#8c8c8c;--border:#f0f0f0;--shadow:0 2px 12px rgba(0,0,0,.06);--r:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:env(safe-area-inset-bottom,20px);-webkit-font-smoothing:antialiased}
+.container{max-width:480px;margin:0 auto;padding:0 16px}
+.header{text-align:center;padding:36px 0 20px}
+.header h1{font-size:24px;font-weight:700}
+.header p{font-size:13px;color:var(--sub);margin-top:4px}
+.start-section{text-align:center;padding:16px 0 28px}
+.btn-start{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:320px;height:56px;background:linear-gradient(135deg,var(--primary),#4096ff);color:#fff;font-size:18px;font-weight:600;border:none;border-radius:var(--r);cursor:pointer;box-shadow:0 4px 16px rgba(22,119,255,.3);transition:all .2s}
+.btn-start:active{transform:scale(.97)}
+.btn-start:disabled{opacity:.6}
+.loading-section{display:none;text-align:center;padding:40px 0}
+.loading-section.active{display:block}
+.spinner{width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;margin:0 auto 16px;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:14px;color:var(--sub);line-height:2}
+.loading-text .step{opacity:.25;transition:opacity .3s}
+.loading-text .step.active{opacity:1}
+.progress{width:200px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0;overflow:hidden}
+.progress .bar{height:100%;background:var(--primary);border-radius:2px;transition:width .3s;width:0}
+.results-section{display:none;padding-bottom:40px}
+.results-section.active{display:block;animation:fadeIn .4s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding:0 4px}
+.results-header h2{font-size:18px;font-weight:700}
+.badge{font-size:12px;color:var(--sub);background:var(--card);padding:4px 10px;border-radius:20px;box-shadow:var(--shadow)}
+.filter-info{background:#e6f4ff;border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:var(--primary);line-height:1.8}
+.stock-card{background:var(--card);border-radius:var(--r);padding:16px;margin-bottom:10px;box-shadow:var(--shadow)}
+.stock-card .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.stock-card .nb{display:flex;align-items:center;gap:8px}
+.rank{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;background:var(--sub)}
+.rank.r1{background:#fa8c16}.rank.r2{background:#faad14}.rank.r3{background:#d48806}
+.stock-card .nm{font-size:16px;font-weight:600}
+.stock-card .cd{font-size:12px;color:var(--sub)}
+.stock-card .pr{font-size:20px;font-weight:700;color:var(--red)}
+.stock-card .hc{font-size:11px;color:var(--sub)}
+.score-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.score-bar .sl{font-size:12px;color:var(--sub)}
+.score-bar .bt{flex:1;height:6px;background:#f0f0f0;border-radius:3px;overflow:hidden}
+.score-bar .fl{height:100%;border-radius:3px;background:linear-gradient(90deg,#52c41a,#faad14,#ff4d4f);transition:width .6s}
+.score-bar .sv{font-size:14px;font-weight:700;min-width:24px;text-align:right}
+.signals{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
+.signal{font-size:11px;padding:3px 8px;border-radius:5px;font-weight:600}
+.signal.on{background:#fff1f0;color:#ff4d4f}
+.signal.off{background:#f5f5f5;color:#bfbfbf}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+.metric{text-align:center;background:#fafafa;border-radius:8px;padding:8px 4px}
+.metric .l{font-size:10px;color:var(--sub);margin-bottom:3px}
+.metric .v{font-size:13px;font-weight:600}
+.metric .v.up{color:var(--red)}.metric .v.down{color:var(--green)}
+.reasons{background:#f6f8fa;border-radius:8px;padding:8px 10px}
+.reasons .rl{font-size:11px;color:var(--sub);margin-bottom:5px}
+.reasons .tags{display:flex;flex-wrap:wrap;gap:4px}
+.rtag{font-size:10px;padding:2px 6px;border-radius:5px;background:#e6f4ff;color:var(--primary)}
+.footer{text-align:center;padding:20px 16px 36px}
+.footer .disc{font-size:11px;color:var(--sub);line-height:1.6}
+.footer .ut{font-size:11px;color:var(--sub);margin-top:6px}
+.btn-restart{margin-top:16px;display:inline-flex;align-items:center;gap:6px;padding:10px 22px;background:var(--card);border:1px solid var(--border);border-radius:20px;font-size:13px;color:var(--text);cursor:pointer;box-shadow:var(--shadow)}
+.btn-restart:active{transform:scale(.97)}
+.error-box{display:none;text-align:center;padding:40px 20px}
+.error-box.active{display:block}
+.error-box .icon{font-size:40px;margin-bottom:10px}
+.error-box .msg{font-size:14px;color:var(--sub);line-height:1.6;margin-bottom:16px}
+</style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>A股选股助手</h1>
-            <p>500元本金 · 短线量化筛选</p>
-        </div>
+<div class="container">
+<div class="header">
+<h1>A股选股助手</h1>
+<p>500元本金 · 实时量化筛选 v4</p>
+</div>
 
-        <!-- Start Section -->
-        <div class="start-section" id="startSection">
-            <button class="btn-start" id="btnStart" onclick="startScreener()">
-                <span class="icon">🔍</span>
-                <span>开始选股</span>
-            </button>
-        </div>
+<div class="start-section" id="startSection">
+<button class="btn-start" id="btnStart" onclick="runScreener()">
+<span>🔍</span><span>开始选股</span>
+</button>
+</div>
 
-        <!-- Loading Section -->
-        <div class="loading-section" id="loadingSection">
-            <div class="spinner"></div>
-            <div class="loading-text">
-                <div class="step" id="step1">正在获取全市场实时行情...</div>
-                <div class="step" id="step2">正在筛选财务数据...</div>
-                <div class="step" id="step3">正在进行技术面分析...</div>
-                <div class="step" id="step4">正在生成选股结果...</div>
-            </div>
-        </div>
+<div class="loading-section" id="loadingSection">
+<div class="spinner"></div>
+<div class="loading-text">
+<div class="step" id="s1">正在获取全市场实时行情...</div>
+<div class="step" id="s2">正在筛选价格/PE/ST/换手/成交额...</div>
+<div class="step" id="s3">正在分析技术面 <span id="techProgress"></span></div>
+<div class="step" id="s4">正在生成选股结果...</div>
+</div>
+<div class="progress"><div class="bar" id="progBar"></div></div>
+</div>
 
-        <!-- Results Section -->
-        <div class="results-section" id="resultsSection">
-            <div class="results-header">
-                <h2>选股结果</h2>
-                <span class="badge" id="resultBadge">共 0 只</span>
-            </div>
+<div class="error-box" id="errorBox">
+<div class="icon">⚠️</div>
+<div class="msg" id="errorMsg"></div>
+<button class="btn-restart" onclick="reset()">重试</button>
+</div>
 
-            <div class="winrate-banner" id="winrateBanner" style="display:none;">
-                <span class="icon">🏆</span>
-                <div class="info">
-                    <div class="label">历史推荐胜率</div>
-                    <div class="value" id="winrateValue">-</div>
-                </div>
-            </div>
+<div class="results-section" id="resultsSection">
+<div class="results-header">
+<h2>选股结果</h2>
+<span class="badge" id="badge">共 0 只</span>
+</div>
+<div class="filter-info" id="filterInfo"></div>
+<div id="stockList"></div>
+<div class="footer">
+<div class="disc">本工具仅做客观数据筛选，不构成任何投资建议。<br>入市有风险，投资需谨慎。</div>
+<div class="ut" id="updateTime"></div>
+<button class="btn-restart" onclick="reset()">🔄 重新选股</button>
+</div>
+</div>
+</div>
 
-            <div id="stockList"></div>
+<script>
+// ==================== 配置（500元本金 v4 优化版） ====================
+const CFG = {
+  minPrice: 3.0, maxPrice: 5.0,
+  minAmount: 30000000, maxPE: 50,
+  minTurnover: 1.0,
+  lookback: 60, minDays: 15,
+  maxCandidates: 5, batchSize: 8,
+};
 
-            <div class="footer">
-                <div class="disclaimer">
-                    本工具仅做客观数据筛选，不构成任何投资建议。<br>
-                    入市有风险，投资需谨慎。
-                </div>
-                <div class="update-time" id="updateTime"></div>
-                <button class="btn-restart" onclick="reset()">
-                    <span>🔄</span> 重新选股
-                </button>
-            </div>
-        </div>
-    </div>
+// ==================== JSONP ====================
+function jsonp(url, timeout = 15000) {
+  return new Promise((resolve, reject) => {
+    const cb = '_cb' + Date.now() + Math.floor(Math.random() * 1e4);
+    const s = document.createElement('script');
+    const t = setTimeout(() => { cleanup(); reject(new Error('timeout')); }, timeout);
+    function cleanup() { clearTimeout(t); delete window[cb]; if (s.parentNode) s.parentNode.removeChild(s); }
+    window[cb] = d => { cleanup(); resolve(d); };
+    s.onerror = () => { cleanup(); reject(new Error('network')); };
+    s.src = url + (url.includes('?') ? '&' : '?') + 'cb=' + cb;
+    document.head.appendChild(s);
+  });
+}
 
-    <script>
-        let stockData = null;
+// ==================== 数据获取 ====================
+async function fetchSpot() {
+  const fields = 'f2,f3,f5,f6,f8,f9,f12,f14,f20';
+  const url = `https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=6000&po=1&np=1&fltt=2&invt=2&fid=f6&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23,m:0+t:81+s:2048&fields=${fields}`;
+  const d = await jsonp(url);
+  if (!d || !d.data || !d.data.diff) return [];
+  return d.data.diff.map(x => ({
+    code: x.f12, name: x.f14, price: x.f2, pct: x.f3,
+    volume: x.f5, amount: x.f6, turnover: x.f8,
+    pe: x.f9, totalMV: x.f20,
+  })).filter(s => s.price > 0 && s.pe > 0);
+}
 
-        function startScreener() {
-            document.getElementById('btnStart').disabled = true;
-            document.getElementById('startSection').style.display = 'none';
-            document.getElementById('loadingSection').classList.add('active');
+function secid(code) {
+  if (code.startsWith('6')) return '1.' + code;
+  return '0.' + code;
+}
 
-            // Simulate loading steps
-            const steps = ['step1', 'step2', 'step3', 'step4'];
-            let currentStep = 0;
+async function fetchKline(code) {
+  const end = new Date(), beg = new Date(end.getTime() - CFG.lookback * 864e5);
+  const fmt = d => d.getFullYear() + ('0' + (d.getMonth() + 1)).slice(-2) + ('0' + d.getDate()).slice(-2);
+  const url = `https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=${secid(code)}&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57&klt=101&fqt=0&beg=${fmt(beg)}&end=${fmt(end)}`;
+  const d = await jsonp(url, 10000);
+  if (!d || !d.data || !d.data.klines) return null;
+  return d.data.klines.map(l => { const p = l.split(','); return { o: +p[1], c: +p[2], h: +p[3], lo: +p[4], v: +p[5], a: +p[6] }; });
+}
 
-            const showStep = () => {
-                if (currentStep < steps.length) {
-                    document.getElementById(steps[currentStep]).classList.add('active');
-                    currentStep++;
-                    setTimeout(showStep, 600);
-                }
-            };
+// ==================== 正确技术指标 ====================
+function ema(data, period) {
+  const a = 2 / (period + 1), r = [data[0]];
+  for (let i = 1; i < data.length; i++) r.push(a * data[i] + (1 - a) * r[i - 1]);
+  return r;
+}
 
-            // Start showing steps
-            setTimeout(showStep, 300);
+function calcMACD(closes) {
+  if (closes.length < 26) return null;
+  const e12 = ema(closes, 12), e26 = ema(closes, 26);
+  const dif = e12.map((v, i) => v - e26[i]);
+  const dea = ema(dif, 9);
+  return { dif, dea };
+}
 
-            // Fetch results
-            fetch('results.json?t=' + Date.now())
-                .then(r => r.json())
-                .then(data => {
-                    stockData = data;
-                    // Wait minimum animation time
-                    setTimeout(() => {
-                        showResults(data);
-                    }, 2800);
-                })
-                .catch(err => {
-                    console.error('Failed to load results:', err);
-                    document.getElementById('loadingSection').classList.remove('active');
-                    document.getElementById('startSection').style.display = 'block';
-                    document.getElementById('btnStart').disabled = false;
-                    alert('数据加载失败，请稍后重试');
-                });
-        }
+function calcRSI(closes, period = 14) {
+  if (closes.length < period + 1) return 50;
+  const d = []; for (let i = 1; i < closes.length; i++) d.push(closes[i] - closes[i - 1]);
+  const g = d.map(x => x > 0 ? x : 0), l = d.map(x => x < 0 ? -x : 0);
+  let ag = g.slice(0, period).reduce((a, b) => a + b, 0) / period;
+  let al = l.slice(0, period).reduce((a, b) => a + b, 0) / period;
+  for (let i = period; i < d.length; i++) { ag = (ag * (period - 1) + g[i]) / period; al = (al * (period - 1) + l[i]) / period; }
+  return al === 0 ? 100 : 100 - 100 / (1 + ag / al);
+}
 
-        function showResults(data) {
-            document.getElementById('loadingSection').classList.remove('active');
-            document.getElementById('resultsSection').classList.add('active');
+function calcKDJ(highs, lows, closes, period = 9) {
+  if (closes.length < period) return null;
+  let kv = 50, dv = 50;
+  const kArr = [], dArr = [];
+  for (let i = period - 1; i < closes.length; i++) {
+    const h = Math.max(...highs.slice(i - period + 1, i + 1));
+    const l = Math.min(...lows.slice(i - period + 1, i + 1));
+    const rsv = h > l ? (closes[i] - l) / (h - l) * 100 : 50;
+    kv = 2 / 3 * kv + 1 / 3 * rsv; dv = 2 / 3 * dv + 1 / 3 * kv;
+    kArr.push(kv); dArr.push(dv);
+  }
+  return { k: kArr, d: dArr };
+}
 
-            const stocks = data.stocks || data;
-            const total = data.total_passed || stocks.length;
+// ==================== 技术分析 ====================
+function analyze(hist) {
+  const n = hist.length;
+  if (n < CFG.minDays) return null;
+  const close = hist.map(h => h.c), high = hist.map(h => h.h), low = hist.map(h => h.lo);
+  const vol = hist.map(h => h.v), amt = hist.map(h => h.a);
+  const mean = (a, s, e) => { const x = a.slice(s, e); return x.reduce((p, q) => p + q, 0) / x.length; };
 
-            document.getElementById('resultBadge').textContent = `共 ${total} 只通过筛选`;
+  const ma5 = mean(close, -5), ma10 = n >= 10 ? mean(close, -10) : ma5, ma20 = n >= 20 ? mean(close, -20) : ma5;
+  const lastClose = close[n - 1], lastVol = vol[n - 1];
+  const avgVol20 = n >= 20 ? mean(vol, -20) : mean(vol, 0);
+  const avgAmt20 = n >= 20 ? mean(amt, -20) : mean(amt, 0);
 
-            // Win rate
-            if (data.win_rate) {
-                document.getElementById('winrateBanner').style.display = 'flex';
-                document.getElementById('winrateValue').textContent = data.win_rate;
-            }
+  let ma5S = 0, ma10S = 0, ma20S = 0;
+  if (n >= 10) { const p = mean(close, -10, -5); ma5S = p > 0 ? (ma5 - p) / p * 100 : 0; }
+  if (n >= 20) { const p = mean(close, -20, -10); ma10S = p > 0 ? (ma10 - p) / p * 100 : 0; }
+  if (n >= 40) { const p = mean(close, -40, -20); ma20S = p > 0 ? (ma20 - p) / p * 100 : 0; }
 
-            // Update time
-            if (data.update_time) {
-                document.getElementById('updateTime').textContent = '数据更新时间: ' + data.update_time;
-            }
+  const bullAlign = ma5 > ma10 && ma10 > ma20;
+  const onMA5 = lastClose >= ma5 * 0.98, onMA10 = lastClose >= ma10 * 0.98;
 
-            // Render stocks
-            const list = document.getElementById('stockList');
-            list.innerHTML = '';
+  // MACD (正确EMA)
+  const macd = calcMACD(close);
+  let macdBull = false, macdGold = false;
+  if (macd) {
+    const { dif, dea } = macd, ni = dif.length - 1;
+    macdBull = dif[ni] > dea[ni];
+    if (ni >= 1) macdGold = dif[ni - 1] <= dea[ni - 1] && dif[ni] > dea[ni];
+  }
 
-            if (!stocks || stocks.length === 0) {
-                list.innerHTML = '<div class="empty-state"><div class="icon">📊</div><div>当前无符合条件股票</div><div style="margin-top:8px;font-size:13px">建议放宽筛选参数</div></div>';
-                return;
-            }
+  // KDJ 金叉
+  const kdj = calcKDJ(high, low, close);
+  let kdjGold = false;
+  if (kdj && kdj.k.length >= 2) {
+    const ki = kdj.k.length - 1;
+    kdjGold = kdj.k[ki - 1] <= kdj.d[ki - 1] && kdj.k[ki] > kdj.d[ki] && kdj.k[ki] < 80;
+  }
 
-            stocks.forEach((stock, i) => {
-                const card = createStockCard(stock, i);
-                list.appendChild(card);
-            });
-        }
+  const volRatio = avgVol20 > 0 ? lastVol / avgVol20 : 0;
+  const volExpand = volRatio >= 1.2 && volRatio <= 2.5;
 
-        function createStockCard(stock, index) {
-            const card = document.createElement('div');
-            card.className = 'stock-card';
+  // 量能递增
+  let volTrendUp = false;
+  if (n >= 5) { const v5 = vol.slice(-5); volTrendUp = v5.every((v, i) => i === 0 || v >= v5[i - 1] * 0.95); }
 
-            const rank = index + 1;
-            const rankClass = rank <= 3 ? `rank-${rank}` : '';
-            const scorePercent = Math.min(stock.score / 100 * 100, 100);
-            const avgAmountWan = (stock.avg_amount_20d / 10000).toFixed(0);
+  let breakout = false;
+  if (n >= 20) breakout = lastClose > Math.max(...close.slice(-20, -1));
 
-            const reasons = stock.tech_reason.split(', ').map(r => r.trim()).filter(r => r);
+  const rsi = calcRSI(close, 14);
 
-            card.innerHTML = `
-                <div class="top-row">
-                    <div class="name-block">
-                        <div class="rank ${rankClass}">${rank}</div>
-                        <div>
-                            <div class="name">${stock.name}</div>
-                            <div class="code">${stock.code}</div>
-                        </div>
-                    </div>
-                    <div class="price-block">
-                        <div class="price">¥${stock.price.toFixed(2)}</div>
-                        <div class="hand-cost">1手 ¥${stock.hand_cost.toFixed(0)}</div>
-                    </div>
-                </div>
+  let bbPos = 0.5;
+  if (n >= 20) {
+    const std = Math.sqrt(close.slice(-20).reduce((s, v) => s + (v - ma20) ** 2, 0) / 20);
+    const u = ma20 + 2 * std, l = ma20 - 2 * std;
+    if (u > l) bbPos = Math.max(0, Math.min(1, (lastClose - l) / (u - l)));
+  }
 
-                <div class="score-bar">
-                    <span class="score-label">综合评分</span>
-                    <div class="bar"><div class="fill" style="width:0%" data-target="${scorePercent}"></div></div>
-                    <span class="score-value">${stock.score}</span>
-                </div>
+  const consecUp = n >= 3 && close[n - 1] > close[n - 2] && close[n - 2] > close[n - 3];
 
-                <div class="metrics">
-                    <div class="metric">
-                        <div class="label">市盈率</div>
-                        <div class="value">${stock.pe.toFixed(1)}</div>
-                    </div>
-                    <div class="metric">
-                        <div class="label">负债率</div>
-                        <div class="value">${stock.fzl}%</div>
-                    </div>
-                    <div class="metric">
-                        <div class="label">RSI(14)</div>
-                        <div class="value">${stock.rsi_14.toFixed(1)}</div>
-                    </div>
-                    <div class="metric">
-                        <div class="label">MACD</div>
-                        <div class="value ${stock.macd_bull === '多' ? 'up' : 'down'}">${stock.macd_bull}</div>
-                    </div>
-                    <div class="metric">
-                        <div class="label">MA5斜率</div>
-                        <div class="value ${stock.ma5_slope > 0 ? 'up' : 'down'}">${stock.ma5_slope > 0 ? '+' : ''}${stock.ma5_slope.toFixed(2)}%</div>
-                    </div>
-                    <div class="metric">
-                        <div class="label">量比</div>
-                        <div class="value">${stock.vol_today_ratio.toFixed(2)}</div>
-                    </div>
-                    <div class="metric">
-                        <div class="label">20日均额</div>
-                        <div class="value" style="font-size:12px">${avgAmountWan}万</div>
-                    </div>
-                    <div class="metric">
-                        <div class="label">布林位置</div>
-                        <div class="value">${(stock.bb_pos * 100).toFixed(0)}%</div>
-                    </div>
-                </div>
+  return { ma5, ma10, ma20, ma5S, ma10S, ma20S, bullAlign, onMA5, onMA10, macdBull, macdGold, kdjGold, volExpand, volTrendUp, breakout, consecUp, volRatio, rsi, bbPos, avgAmt20 };
+}
 
-                <div class="reasons">
-                    <div class="reasons-label">技术理由</div>
-                    <div class="reasons-tags">
-                        ${reasons.map(r => `<span class="reason-tag">${r}</span>`).join('')}
-                    </div>
-                </div>
-            `;
+function scoreStock(t) {
+  let s = 0; const r = [];
+  if (t.bullAlign) { s += 12; r.push('均线多头排列'); }
+  if (t.macdGold) { s += 12; r.push('MACD金叉'); }
+  if (t.breakout) { s += 12; r.push('突破前高'); }
+  if (t.kdjGold) { s += 10; r.push('KDJ金叉'); }
+  if (t.avgAmt20 >= 5e7) { s += 6; r.push('流动性充足'); }
+  if (t.onMA5) { s += 6; r.push('站上5日线'); }
+  if (t.onMA10) { s += 4; r.push('站上10日线'); }
+  if (t.ma5S > 0) { s += 6; r.push('MA5上行'); }
+  if (t.ma10S > 0) { s += 4; r.push('MA10上行'); }
+  if (t.ma20S > -0.3) { s += 3; r.push('MA20趋稳'); }
+  if (t.volExpand) { s += 8; r.push('温和放量'); }
+  if (t.volTrendUp) { s += 5; r.push('量能递增'); }
+  if (t.consecUp) { s += 6; r.push('连续小阳'); }
+  if (t.macdBull) { s += 4; r.push('MACD多头'); }
+  if (t.rsi > 40 && t.rsi < 70) { s += 4; r.push('RSI有空间'); }
+  if (t.bbPos > 0.4 && t.bbPos < 0.8) { s += 4; r.push('布林中上轨'); }
+  return { score: s, reasons: r };
+}
 
-            // Animate score bar
-            setTimeout(() => {
-                const fill = card.querySelector('.fill');
-                fill.style.width = fill.dataset.target + '%';
-            }, 100 + index * 80);
+// ==================== 主流程 ====================
+async function runScreener() {
+  document.getElementById('btnStart').disabled = true;
+  document.getElementById('startSection').style.display = 'none';
+  document.getElementById('loadingSection').classList.add('active');
+  document.getElementById('errorBox').classList.remove('active');
+  const setStep = n => { for (let i = 1; i <= 4; i++) document.getElementById('s' + i).classList.toggle('active', i <= n); document.getElementById('progBar').style.width = n * 25 + '%'; };
 
-            return card;
-        }
+  try {
+    setStep(1);
+    let stocks = await fetchSpot();
+    const total = stocks.length;
 
-        function reset() {
-            document.getElementById('resultsSection').classList.remove('active');
-            document.getElementById('startSection').style.display = 'block';
-            document.getElementById('btnStart').disabled = false;
-        }
-    </script>
+    setStep(2);
+    stocks = stocks.filter(s => s.price >= CFG.minPrice && s.price <= CFG.maxPrice);
+    const afterPrice = stocks.length;
+    stocks = stocks.filter(s => s.pe > 0 && s.pe <= CFG.maxPE);
+    const afterPE = stocks.length;
+    stocks = stocks.filter(s => !s.name.includes('ST') && !s.name.includes('退'));
+    const afterST = stocks.length;
+    stocks = stocks.filter(s => s.turnover >= CFG.minTurnover);
+    const afterTurn = stocks.length;
+    stocks = stocks.filter(s => s.amount >= CFG.minAmount);
+    const afterAmt = stocks.length;
+    if (!stocks.length) { showErr('当前市场无符合条件股票'); return; }
+
+    setStep(3);
+    const results = [], tp = document.getElementById('techProgress');
+    for (let i = 0; i < stocks.length; i += CFG.batchSize) {
+      const batch = stocks.slice(i, i + CFG.batchSize);
+      const rs = await Promise.allSettled(batch.map(async s => {
+        const hist = await fetchKline(s.code);
+        if (!hist) return null;
+        const tech = analyze(hist);
+        if (!tech) return null;
+        const { score, reasons } = scoreStock(tech);
+        return { score, code: s.code, name: s.name, price: s.price, handCost: s.price * 100, pe: s.pe, totalMV: s.totalMV, avgAmt20: tech.avgAmt20, ma5: tech.ma5, ma10: tech.ma10, ma5S: tech.ma5S, ma10S: tech.ma10S, ma20S: tech.ma20S, bullAlign: tech.bullAlign, macdGold: tech.macdGold, kdjGold: tech.kdjGold, breakout: tech.breakout, volExpand: tech.volExpand, volTrendUp: tech.volTrendUp, consecUp: tech.consecUp, onMA5: tech.onMA5, volRatio: tech.volRatio, rsi: tech.rsi, macdBull: tech.macdBull, bbPos: tech.bbPos, techReason: reasons.join(', ') };
+      }));
+      rs.forEach(r => { if (r.status === 'fulfilled' && r.value) results.push(r.value); });
+      tp.textContent = `(${Math.min(i + CFG.batchSize, stocks.length)}/${stocks.length})`;
+      document.getElementById('progBar').style.width = (25 + Math.min(50, (i + CFG.batchSize) / stocks.length * 50)) + '%';
+    }
+
+    setStep(4);
+    results.sort((a, b) => b.score - a.score);
+    const top = results.slice(0, CFG.maxCandidates);
+    if (!top.length) { showErr('技术分析后无符合条件股票'); return; }
+    document.getElementById('progBar').style.width = '100%';
+    setTimeout(() => showResults(top, { total, afterPrice, afterPE, afterST, afterTurn, afterAmt, passed: results.length }), 400);
+  } catch (e) { console.error(e); showErr('数据获取失败：' + e.message); }
+}
+
+function showErr(msg) {
+  document.getElementById('loadingSection').classList.remove('active');
+  document.getElementById('errorBox').classList.add('active');
+  document.getElementById('errorMsg').textContent = msg;
+}
+
+function showResults(stocks, f) {
+  document.getElementById('loadingSection').classList.remove('active');
+  document.getElementById('resultsSection').classList.add('active');
+  document.getElementById('badge').textContent = `共 ${f.passed} 只通过`;
+  document.getElementById('filterInfo').innerHTML = `全市场 ${f.total} → 价格 ${f.afterPrice} → PE ${f.afterPE} → 排ST ${f.afterST} → 换手 ${f.afterTurn} → 成交额 ${f.afterAmt} → 技术分析 ${f.passed} 只`;
+  document.getElementById('updateTime').textContent = '数据时间: ' + new Date().toLocaleString('zh-CN');
+  const list = document.getElementById('stockList');
+  list.innerHTML = '';
+  stocks.forEach((s, i) => {
+    const rank = i + 1, rankCls = rank <= 3 ? 'r' + rank : '';
+    const reasons = s.techReason.split(', ');
+    const amtW = (s.avgAmt20 / 1e4).toFixed(0);
+    const sig = (l, on) => `<span class="signal ${on ? 'on' : 'off'}">${l}${on ? '✓' : '✗'}</span>`;
+    const card = document.createElement('div');
+    card.className = 'stock-card';
+    card.innerHTML = `
+      <div class="top"><div class="nb"><div class="rank ${rankCls}">${rank}</div><div><div class="nm">${s.name}</div><div class="cd">${s.code}</div></div></div>
+      <div style="text-align:right"><div class="pr">¥${s.price.toFixed(2)}</div><div class="hc">1手 ¥${s.handCost.toFixed(0)}</div></div></div>
+      <div class="score-bar"><span class="sl">评分</span><div class="bt"><div class="fl" style="width:0" data-w="${s.score}"></div></div><span class="sv">${s.score}</span></div>
+      <div class="signals">${sig('多头', s.bullAlign)}${sig('MACD叉', s.macdGold)}${sig('KDJ叉', s.kdjGold)}${sig('突破', s.breakout)}${sig('量增', s.volTrendUp)}</div>
+      <div class="metrics">
+        <div class="metric"><div class="l">市盈率</div><div class="v">${s.pe.toFixed(1)}</div></div>
+        <div class="metric"><div class="l">RSI(14)</div><div class="v">${s.rsi.toFixed(1)}</div></div>
+        <div class="metric"><div class="l">MACD</div><div class="v ${s.macdBull ? 'up' : 'down'}">${s.macdBull ? '多' : '空'}</div></div>
+        <div class="metric"><div class="l">量比</div><div class="v">${s.volRatio.toFixed(2)}</div></div>
+        <div class="metric"><div class="l">MA5斜率</div><div class="v ${s.ma5S > 0 ? 'up' : 'down'}">${s.ma5S > 0 ? '+' : ''}${s.ma5S.toFixed(2)}%</div></div>
+        <div class="metric"><div class="l">MA10斜率</div><div class="v ${s.ma10S > 0 ? 'up' : 'down'}">${s.ma10S > 0 ? '+' : ''}${s.ma10S.toFixed(2)}%</div></div>
+        <div class="metric"><div class="l">20日均额</div><div class="v" style="font-size:11px">${amtW}万</div></div>
+        <div class="metric"><div class="l">布林位</div><div class="v">${(s.bbPos * 100).toFixed(0)}%</div></div>
+      </div>
+      <div class="reasons"><div class="rl">技术理由</div><div class="tags">${reasons.map(r => `<span class="rtag">${r}</span>`).join('')}</div></div>`;
+    list.appendChild(card);
+    setTimeout(() => { const fl = card.querySelector('.fl'); fl.style.width = fl.dataset.w + '%'; }, 100 + i * 60);
+  });
+}
+
+function reset() {
+  document.getElementById('resultsSection').classList.remove('active');
+  document.getElementById('errorBox').classList.remove('active');
+  document.getElementById('startSection').style.display = 'block';
+  document.getElementById('btnStart').disabled = false;
+  document.getElementById('progBar').style.width = '0';
+  document.getElementById('techProgress').textContent = '';
+}
+</script>
 </body>
 </html>
