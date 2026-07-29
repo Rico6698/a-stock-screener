@@ -38,3 +38,10 @@ jobs:
           git add results.json
           git diff --staged --quiet || git commit -m "auto: update screener results $(date -u '+%Y-%m-%d %H:%M')"
           git push
+
+      - name: 发送邮件
+        env:
+          QQ_MAIL_ADDR: ${{ secrets.QQ_MAIL_ADDR }}
+          QQ_MAIL_AUTH: ${{ secrets.QQ_MAIL_AUTH }}
+        run: |
+          python send_email.py
