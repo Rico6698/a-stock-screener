@@ -2,11 +2,20 @@ name: A股选股筛选
 
 on:
   schedule:
-    # 早上 09:00 CST (01:00 UTC) — 选股推荐
-    - cron: '0 1 * * 1-5'
-    # 下午 16:00 CST (08:00 UTC) — 结果验证
-    - cron: '0 8 * * 1-5'
-  workflow_dispatch: # 支持手动触发
+    # 早上 09:05 CST (01:05 UTC) — 选股推荐（避开整点高峰）
+    - cron: '5 1 * * 1-5'
+    # 下午 16:05 CST (08:05 UTC) — 结果验证
+    - cron: '5 8 * * 1-5'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: '运行模式'
+        required: true
+        default: 'screener'
+        type: choice
+        options:
+          - screener
+          - validation
 
 permissions:
   contents: write
@@ -27,14 +36,14 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      # ===== 早上 09:00：选股 + 发推荐邮件 =====
+      # ===== 早上：选股 + 发推荐邮件 =====
       - name: 运行选股脚本
-        if: github.event.schedule == '0 1 * * 1-5' || github.event_name == 'workflow_dispatch'
+        if: github.event.schedule == '5 1 * * 1-5' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'screener')
         run: |
           python generate_results.py
 
       - name: 提交结果
-        if: github.event.schedule == '0 1 * * 1-5' || github.event_name == 'workflow_dispatch'
+        if: github.event.schedule == '5 1 * * 1-5' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'screener')
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -43,16 +52,16 @@ jobs:
           git push
 
       - name: 发送选股邮件
-        if: github.event.schedule == '0 1 * * 1-5' || github.event_name == 'workflow_dispatch'
+        if: github.event.schedule == '5 1 * * 1-5' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'screener')
         env:
           QQ_MAIL_ADDR: ${{ secrets.QQ_MAIL_ADDR }}
           QQ_MAIL_AUTH: ${{ secrets.QQ_MAIL_AUTH }}
         run: |
           python send_email.py
 
-      # ===== 下午 16:00：验证预测结果 + 发对比邮件 =====
+      # ===== 下午：验证预测结果 + 发对比邮件 =====
       - name: 验证预测结果
-        if: github.event.schedule == '0 8 * * 1-5'
+        if: github.event.schedule == '5 8 * * 1-5' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'validation')
         env:
           QQ_MAIL_ADDR: ${{ secrets.QQ_MAIL_ADDR }}
           QQ_MAIL_AUTH: ${{ secrets.QQ_MAIL_AUTH }}
