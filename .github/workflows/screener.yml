@@ -2,8 +2,9 @@ name: A股选股筛选
 
 on:
   schedule:
-    # 每个交易日 15:30 CST (07:30 UTC) 运行
-    - cron: '30 7 * * 1-5'
+    # 每天 09:00 CST (01:00 UTC) 和 15:00 CST (07:00 UTC)
+    - cron: '0 1 * * 1-5'
+    - cron: '0 7 * * 1-5'
   workflow_dispatch: # 支持手动触发
 
 permissions:
