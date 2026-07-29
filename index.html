@@ -87,8 +87,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 <div class="loading-section" id="loadingSection">
 <div class="spinner"></div>
 <div class="loading-text">
-<div class="step" id="s1">正在获取全市场实时行情...</div>
-<div class="step" id="s2">正在筛选价格/PE/ST/换手/成交额...</div>
+<div class="step" id="s1">正在加载候选股票列表...</div>
+<div class="step" id="s2">正在获取实时行情...</div>
 <div class="step" id="s3">正在分析技术面 <span id="techProgress"></span></div>
 <div class="step" id="s4">正在生成选股结果...</div>
 </div>
@@ -117,57 +117,77 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 </div>
 
 <script>
-// ==================== 配置（500元本金 v4 优化版） ====================
-const CFG = {
-  minPrice: 3.0, maxPrice: 5.0,
-  minAmount: 30000000, maxPE: 50,
-  minTurnover: 1.0,
-  lookback: 60, minDays: 15,
-  maxCandidates: 5, batchSize: 8,
-};
+// ==================== 配置 ====================
+const CFG = { minDays: 15, maxCandidates: 5, batchSize: 6 };
 
-// ==================== JSONP ====================
-function jsonp(url, timeout = 15000) {
+// ==================== Script Tag 加载（绕过 CORS） ====================
+function loadScript(url, varName, timeout = 15000) {
   return new Promise((resolve, reject) => {
-    const cb = '_cb' + Date.now() + Math.floor(Math.random() * 1e4);
     const s = document.createElement('script');
     const t = setTimeout(() => { cleanup(); reject(new Error('timeout')); }, timeout);
-    function cleanup() { clearTimeout(t); delete window[cb]; if (s.parentNode) s.parentNode.removeChild(s); }
-    window[cb] = d => { cleanup(); resolve(d); };
-    s.onerror = () => { cleanup(); reject(new Error('network')); };
-    s.src = url + (url.includes('?') ? '&' : '?') + 'cb=' + cb;
+    function cleanup() { clearTimeout(t); if (s.parentNode) s.parentNode.removeChild(s); }
+    s.onload = () => {
+      cleanup();
+      // 变量会在全局作用域中
+      if (varName && window[varName] !== undefined) {
+        const data = window[varName];
+        delete window[varName];
+        resolve(data);
+      } else {
+        resolve(true);
+      }
+    };
+    s.onerror = () => { cleanup(); reject(new Error('load error')); };
+    s.src = url;
     document.head.appendChild(s);
   });
 }
 
-// ==================== 数据获取 ====================
-async function fetchSpot() {
-  const fields = 'f2,f3,f5,f6,f8,f9,f12,f14,f20';
-  const url = `https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=6000&po=1&np=1&fltt=2&invt=2&fid=f6&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23,m:0+t:81+s:2048&fields=${fields}`;
-  const d = await jsonp(url);
-  if (!d || !d.data || !d.data.diff) return [];
-  return d.data.diff.map(x => ({
-    code: x.f12, name: x.f14, price: x.f2, pct: x.f3,
-    volume: x.f5, amount: x.f6, turnover: x.f8,
-    pe: x.f9, totalMV: x.f20,
-  })).filter(s => s.price > 0 && s.pe > 0);
+// ==================== 腾讯 API 数据获取 ====================
+async function fetchQuotes(codes) {
+  // codes: ["sh600507", "sz002075", ...]
+  const url = 'https://qt.gtimg.cn/q=' + codes.join(',');
+  await loadScript(url);
+  const results = {};
+  codes.forEach(c => {
+    const varName = 'v_' + c;
+    const raw = window[varName];
+    delete window[varName];
+    if (!raw) return;
+    const parts = raw.split('~');
+    if (parts.length < 45) return;
+    results[c] = {
+      name: parts[1], code: parts[2],
+      price: parseFloat(parts[3]),
+      prevClose: parseFloat(parts[4]),
+      open: parseFloat(parts[5]),
+      volume: parseFloat(parts[6]),
+      amount: parseFloat(parts[37]) * 10000, // 万→元
+      turnover: parseFloat(parts[38]),
+      pe: parseFloat(parts[39]),
+      totalMV: parseFloat(parts[44]) * 1e8, // 亿→元
+      high: parseFloat(parts[33]),
+      low: parseFloat(parts[34]),
+      pct: parseFloat(parts[32]),
+    };
+  });
+  return results;
 }
 
-function secid(code) {
-  if (code.startsWith('6')) return '1.' + code;
-  return '0.' + code;
+async function fetchKline(tencentCode) {
+  const varName = '_kd_' + tencentCode + '_' + Date.now();
+  const url = `https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=${tencentCode},day,,,60,qfq&_var=${varName}`;
+  const data = await loadScript(url, varName);
+  if (!data || !data.data || !data.data[tencentCode]) return null;
+  const klines = data.data[tencentCode].qfqday || data.data[tencentCode].day;
+  if (!klines || !klines.length) return null;
+  return klines.map(k => ({
+    o: parseFloat(k[1]), c: parseFloat(k[2]),
+    h: parseFloat(k[3]), lo: parseFloat(k[4]), v: parseFloat(k[5]),
+  }));
 }
 
-async function fetchKline(code) {
-  const end = new Date(), beg = new Date(end.getTime() - CFG.lookback * 864e5);
-  const fmt = d => d.getFullYear() + ('0' + (d.getMonth() + 1)).slice(-2) + ('0' + d.getDate()).slice(-2);
-  const url = `https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=${secid(code)}&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57&klt=101&fqt=0&beg=${fmt(beg)}&end=${fmt(end)}`;
-  const d = await jsonp(url, 10000);
-  if (!d || !d.data || !d.data.klines) return null;
-  return d.data.klines.map(l => { const p = l.split(','); return { o: +p[1], c: +p[2], h: +p[3], lo: +p[4], v: +p[5], a: +p[6] }; });
-}
-
-// ==================== 正确技术指标 ====================
+// ==================== 技术指标 ====================
 function ema(data, period) {
   const a = 2 / (period + 1), r = [data[0]];
   for (let i = 1; i < data.length; i++) r.push(a * data[i] + (1 - a) * r[i - 1]);
@@ -211,7 +231,7 @@ function analyze(hist) {
   const n = hist.length;
   if (n < CFG.minDays) return null;
   const close = hist.map(h => h.c), high = hist.map(h => h.h), low = hist.map(h => h.lo);
-  const vol = hist.map(h => h.v), amt = hist.map(h => h.a);
+  const vol = hist.map(h => h.v), amt = hist.map(h => h.a || h.v * h.c);
   const mean = (a, s, e) => { const x = a.slice(s, e); return x.reduce((p, q) => p + q, 0) / x.length; };
 
   const ma5 = mean(close, -5), ma10 = n >= 10 ? mean(close, -10) : ma5, ma20 = n >= 20 ? mean(close, -20) : ma5;
@@ -227,7 +247,6 @@ function analyze(hist) {
   const bullAlign = ma5 > ma10 && ma10 > ma20;
   const onMA5 = lastClose >= ma5 * 0.98, onMA10 = lastClose >= ma10 * 0.98;
 
-  // MACD (正确EMA)
   const macd = calcMACD(close);
   let macdBull = false, macdGold = false;
   if (macd) {
@@ -236,7 +255,6 @@ function analyze(hist) {
     if (ni >= 1) macdGold = dif[ni - 1] <= dea[ni - 1] && dif[ni] > dea[ni];
   }
 
-  // KDJ 金叉
   const kdj = calcKDJ(high, low, close);
   let kdjGold = false;
   if (kdj && kdj.k.length >= 2) {
@@ -247,7 +265,6 @@ function analyze(hist) {
   const volRatio = avgVol20 > 0 ? lastVol / avgVol20 : 0;
   const volExpand = volRatio >= 1.2 && volRatio <= 2.5;
 
-  // 量能递增
   let volTrendUp = false;
   if (n >= 5) { const v5 = vol.slice(-5); volTrendUp = v5.every((v, i) => i === 0 || v >= v5[i - 1] * 0.95); }
 
@@ -298,46 +315,58 @@ async function runScreener() {
   const setStep = n => { for (let i = 1; i <= 4; i++) document.getElementById('s' + i).classList.toggle('active', i <= n); document.getElementById('progBar').style.width = n * 25 + '%'; };
 
   try {
+    // Step 1: 加载候选列表
     setStep(1);
-    let stocks = await fetchSpot();
-    const total = stocks.length;
+    const resp = await fetch('results.json?t=' + Date.now());
+    const data = await resp.json();
+    const watchlist = data.watchlist || [];
+    if (!watchlist.length) { showErr('候选列表为空，请等待每日更新'); return; }
 
+    // Step 2: 获取实时行情（批量）
     setStep(2);
-    stocks = stocks.filter(s => s.price >= CFG.minPrice && s.price <= CFG.maxPrice);
-    const afterPrice = stocks.length;
-    stocks = stocks.filter(s => s.pe > 0 && s.pe <= CFG.maxPE);
-    const afterPE = stocks.length;
-    stocks = stocks.filter(s => !s.name.includes('ST') && !s.name.includes('退'));
-    const afterST = stocks.length;
-    stocks = stocks.filter(s => s.turnover >= CFG.minTurnover);
-    const afterTurn = stocks.length;
-    stocks = stocks.filter(s => s.amount >= CFG.minAmount);
-    const afterAmt = stocks.length;
-    if (!stocks.length) { showErr('当前市场无符合条件股票'); return; }
+    const tencentCodes = watchlist.map(w => w.tencent_code);
+    const quotes = await fetchQuotes(tencentCodes);
+    const validStocks = watchlist.filter(w => quotes[w.tencent_code] && quotes[w.tencent_code].price > 0);
 
+    // Step 3: 技术分析（分批）
     setStep(3);
     const results = [], tp = document.getElementById('techProgress');
-    for (let i = 0; i < stocks.length; i += CFG.batchSize) {
-      const batch = stocks.slice(i, i + CFG.batchSize);
-      const rs = await Promise.allSettled(batch.map(async s => {
-        const hist = await fetchKline(s.code);
+    for (let i = 0; i < validStocks.length; i += CFG.batchSize) {
+      const batch = validStocks.slice(i, i + CFG.batchSize);
+      const rs = await Promise.allSettled(batch.map(async w => {
+        const q = quotes[w.tencent_code];
+        const hist = await fetchKline(w.tencent_code);
         if (!hist) return null;
         const tech = analyze(hist);
         if (!tech) return null;
         const { score, reasons } = scoreStock(tech);
-        return { score, code: s.code, name: s.name, price: s.price, handCost: s.price * 100, pe: s.pe, totalMV: s.totalMV, avgAmt20: tech.avgAmt20, ma5: tech.ma5, ma10: tech.ma10, ma5S: tech.ma5S, ma10S: tech.ma10S, ma20S: tech.ma20S, bullAlign: tech.bullAlign, macdGold: tech.macdGold, kdjGold: tech.kdjGold, breakout: tech.breakout, volExpand: tech.volExpand, volTrendUp: tech.volTrendUp, consecUp: tech.consecUp, onMA5: tech.onMA5, volRatio: tech.volRatio, rsi: tech.rsi, macdBull: tech.macdBull, bbPos: tech.bbPos, techReason: reasons.join(', ') };
+        return {
+          score, code: w.code, name: w.name,
+          price: q.price, handCost: q.price * 100,
+          pe: q.pe, totalMV: q.totalMV,
+          avgAmt20: tech.avgAmt20, ma5: tech.ma5, ma10: tech.ma10,
+          ma5S: tech.ma5S, ma10S: tech.ma10S, ma20S: tech.ma20S,
+          bullAlign: tech.bullAlign, macdGold: tech.macdGold,
+          kdjGold: tech.kdjGold, breakout: tech.breakout,
+          volExpand: tech.volExpand, volTrendUp: tech.volTrendUp,
+          consecUp: tech.consecUp, onMA5: tech.onMA5,
+          volRatio: tech.volRatio, rsi: tech.rsi,
+          macdBull: tech.macdBull, bbPos: tech.bbPos,
+          techReason: reasons.join(', '),
+        };
       }));
       rs.forEach(r => { if (r.status === 'fulfilled' && r.value) results.push(r.value); });
-      tp.textContent = `(${Math.min(i + CFG.batchSize, stocks.length)}/${stocks.length})`;
-      document.getElementById('progBar').style.width = (25 + Math.min(50, (i + CFG.batchSize) / stocks.length * 50)) + '%';
+      tp.textContent = `(${Math.min(i + CFG.batchSize, validStocks.length)}/${validStocks.length})`;
+      document.getElementById('progBar').style.width = (25 + Math.min(50, (i + CFG.batchSize) / validStocks.length * 50)) + '%';
     }
 
+    // Step 4: 显示结果
     setStep(4);
     results.sort((a, b) => b.score - a.score);
     const top = results.slice(0, CFG.maxCandidates);
     if (!top.length) { showErr('技术分析后无符合条件股票'); return; }
     document.getElementById('progBar').style.width = '100%';
-    setTimeout(() => showResults(top, { total, afterPrice, afterPE, afterST, afterTurn, afterAmt, passed: results.length }), 400);
+    setTimeout(() => showResults(top, { total: watchlist.length, passed: results.length }), 400);
   } catch (e) { console.error(e); showErr('数据获取失败：' + e.message); }
 }
 
@@ -351,8 +380,8 @@ function showResults(stocks, f) {
   document.getElementById('loadingSection').classList.remove('active');
   document.getElementById('resultsSection').classList.add('active');
   document.getElementById('badge').textContent = `共 ${f.passed} 只通过`;
-  document.getElementById('filterInfo').innerHTML = `全市场 ${f.total} → 价格 ${f.afterPrice} → PE ${f.afterPE} → 排ST ${f.afterST} → 换手 ${f.afterTurn} → 成交额 ${f.afterAmt} → 技术分析 ${f.passed} 只`;
-  document.getElementById('updateTime').textContent = '数据时间: ' + new Date().toLocaleString('zh-CN');
+  document.getElementById('filterInfo').innerHTML = `候选 ${f.total} 只 → 技术分析通过 ${f.passed} 只`;
+  document.getElementById('updateTime').textContent = '分析时间: ' + new Date().toLocaleString('zh-CN');
   const list = document.getElementById('stockList');
   list.innerHTML = '';
   stocks.forEach((s, i) => {
