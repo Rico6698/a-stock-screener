@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>A股选股助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg: #f5f5f7;
+            --card-bg: #ffffff;
+            --primary: #1677ff;
+            --primary-dark: #0958d9;
+            --red: #ff4d4f;
+            --green: #52c41a;
+            --text: #1a1a1a;
+            --text-secondary: #8c8c8c;
+            --border: #f0f0f0;
+            --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --radius: 14px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 0 24px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Start Button */
+        .start-section {
+            text-align: center;
+            padding: 20px 0 32px;
+        }
+
+        .btn-start {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 320px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary), #4096ff);
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(22, 119, 255, 0.3);
+        }
+
+        .btn-start:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 8px rgba(22, 119, 255, 0.2);
+        }
+
+        .btn-start:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-start .icon {
+            font-size: 20px;
+        }
+
+        /* Loading */
+        .loading-section {
+            display: none;
+            text-align: center;
+            padding: 48px 0;
+        }
+
+        .loading-section.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .loading-text .step {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .loading-text .step.active {
+            opacity: 1;
+        }
+
+        /* Results */
+        .results-section {
+            display: none;
+            padding-bottom: 40px;
+        }
+
+        .results-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+
+        .results-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .results-header .badge {
+            font-size: 12px;
+            color: var(--text-secondary);
+            background: var(--card-bg);
+            padding: 4px 10px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Win Rate Banner */
+        .winrate-banner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #fff7e6, #fffbe6);
+            border: 1px solid #ffe7ba;
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-bottom: 16px;
+        }
+
+        .winrate-banner .icon {
+            font-size: 28px;
+        }
+
+        .winrate-banner .info {
+            flex: 1;
+        }
+
+        .winrate-banner .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+
+        .winrate-banner .value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #d48806;
+        }
+
+        /* Stock Card */
+        .stock-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 18px 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+            transition: transform 0.15s;
+        }
+
+        .stock-card:active {
+            transform: scale(0.98);
+        }
+
+        .stock-card .top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .stock-card .name-block {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stock-card .rank {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            background: var(--text-secondary);
+        }
+
+        .stock-card .rank.rank-1 { background: #fa8c16; }
+        .stock-card .rank.rank-2 { background: #faad14; }
+        .stock-card .rank.rank-3 { background: #d48806; }
+
+        .stock-card .name {
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .stock-card .code {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .stock-card .price-block {
+            text-align: right;
+        }
+
+        .stock-card .price {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        .stock-card .hand-cost {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .stock-card .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .metric {
+            text-align: center;
+            background: #fafafa;
+            border-radius: 10px;
+            padding: 10px 4px;
+        }
+
+        .metric .label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .metric .value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .metric .value.up { color: var(--red); }
+        .metric .value.down { color: var(--green); }
+
+        .stock-card .reasons {
+            background: #f6f8fa;
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+
+        .stock-card .reasons-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .stock-card .reasons-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .reason-tag {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: #e6f4ff;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        /* Score Bar */
+        .score-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .score-bar .score-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .score-bar .bar {
+            flex: 1;
+            height: 6px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .score-bar .fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #52c41a, #faad14, var(--red));
+            transition: width 0.6s ease;
+        }
+
+        .score-bar .score-value {
+            font-size: 14px;
+            font-weight: 700;
+            min-width: 28px;
+            text-align: right;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 24px 16px 40px;
+        }
+
+        .footer .disclaimer {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .footer .update-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        .btn-restart {
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 24px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            font-size: 14px;
+            color: var(--text);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+        }
+
+        .btn-restart:active {
+            transform: scale(0.97);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 48px 0;
+            color: var(--text-secondary);
+        }
+
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>A股选股助手</h1>
+            <p>500元本金 · 短线量化筛选</p>
+        </div>
+
+        <!-- Start Section -->
+        <div class="start-section" id="startSection">
+            <button class="btn-start" id="btnStart" onclick="startScreener()">
+                <span class="icon">🔍</span>
+                <span>开始选股</span>
+            </button>
+        </div>
+
+        <!-- Loading Section -->
+        <div class="loading-section" id="loadingSection">
+            <div class="spinner"></div>
+            <div class="loading-text">
+                <div class="step" id="step1">正在获取全市场实时行情...</div>
+                <div class="step" id="step2">正在筛选财务数据...</div>
+                <div class="step" id="step3">正在进行技术面分析...</div>
+                <div class="step" id="step4">正在生成选股结果...</div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2>选股结果</h2>
+                <span class="badge" id="resultBadge">共 0 只</span>
+            </div>
+
+            <div class="winrate-banner" id="winrateBanner" style="display:none;">
+                <span class="icon">🏆</span>
+                <div class="info">
+                    <div class="label">历史推荐胜率</div>
+                    <div class="value" id="winrateValue">-</div>
+                </div>
+            </div>
+
+            <div id="stockList"></div>
+
+            <div class="footer">
+                <div class="disclaimer">
+                    本工具仅做客观数据筛选，不构成任何投资建议。<br>
+                    入市有风险，投资需谨慎。
+                </div>
+                <div class="update-time" id="updateTime"></div>
+                <button class="btn-restart" onclick="reset()">
+                    <span>🔄</span> 重新选股
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let stockData = null;
+
+        function startScreener() {
+            document.getElementById('btnStart').disabled = true;
+            document.getElementById('startSection').style.display = 'none';
+            document.getElementById('loadingSection').classList.add('active');
+
+            // Simulate loading steps
+            const steps = ['step1', 'step2', 'step3', 'step4'];
+            let currentStep = 0;
+
+            const showStep = () => {
+                if (currentStep < steps.length) {
+                    document.getElementById(steps[currentStep]).classList.add('active');
+                    currentStep++;
+                    setTimeout(showStep, 600);
+                }
+            };
+
+            // Start showing steps
+            setTimeout(showStep, 300);
+
+            // Fetch results
+            fetch('results.json?t=' + Date.now())
+                .then(r => r.json())
+                .then(data => {
+                    stockData = data;
+                    // Wait minimum animation time
+                    setTimeout(() => {
+                        showResults(data);
+                    }, 2800);
+                })
+                .catch(err => {
+                    console.error('Failed to load results:', err);
+                    document.getElementById('loadingSection').classList.remove('active');
+                    document.getElementById('startSection').style.display = 'block';
+                    document.getElementById('btnStart').disabled = false;
+                    alert('数据加载失败，请稍后重试');
+                });
+        }
+
+        function showResults(data) {
+            document.getElementById('loadingSection').classList.remove('active');
+            document.getElementById('resultsSection').classList.add('active');
+
+            const stocks = data.stocks || data;
+            const total = data.total_passed || stocks.length;
+
+            document.getElementById('resultBadge').textContent = `共 ${total} 只通过筛选`;
+
+            // Win rate
+            if (data.win_rate) {
+                document.getElementById('winrateBanner').style.display = 'flex';
+                document.getElementById('winrateValue').textContent = data.win_rate;
+            }
+
+            // Update time
+            if (data.update_time) {
+                document.getElementById('updateTime').textContent = '数据更新时间: ' + data.update_time;
+            }
+
+            // Render stocks
+            const list = document.getElementById('stockList');
+            list.innerHTML = '';
+
+            if (!stocks || stocks.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="icon">📊</div><div>当前无符合条件股票</div><div style="margin-top:8px;font-size:13px">建议放宽筛选参数</div></div>';
+                return;
+            }
+
+            stocks.forEach((stock, i) => {
+                const card = createStockCard(stock, i);
+                list.appendChild(card);
+            });
+        }
+
+        function createStockCard(stock, index) {
+            const card = document.createElement('div');
+            card.className = 'stock-card';
+
+            const rank = index + 1;
+            const rankClass = rank <= 3 ? `rank-${rank}` : '';
+            const scorePercent = Math.min(stock.score / 100 * 100, 100);
+            const avgAmountWan = (stock.avg_amount_20d / 10000).toFixed(0);
+
+            const reasons = stock.tech_reason.split(', ').map(r => r.trim()).filter(r => r);
+
+            card.innerHTML = `
+                <div class="top-row">
+                    <div class="name-block">
+                        <div class="rank ${rankClass}">${rank}</div>
+                        <div>
+                            <div class="name">${stock.name}</div>
+                            <div class="code">${stock.code}</div>
+                        </div>
+                    </div>
+                    <div class="price-block">
+                        <div class="price">¥${stock.price.toFixed(2)}</div>
+                        <div class="hand-cost">1手 ¥${stock.hand_cost.toFixed(0)}</div>
+                    </div>
+                </div>
+
+                <div class="score-bar">
+                    <span class="score-label">综合评分</span>
+                    <div class="bar"><div class="fill" style="width:0%" data-target="${scorePercent}"></div></div>
+                    <span class="score-value">${stock.score}</span>
+                </div>
+
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="label">市盈率</div>
+                        <div class="value">${stock.pe.toFixed(1)}</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">负债率</div>
+                        <div class="value">${stock.fzl}%</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">RSI(14)</div>
+                        <div class="value">${stock.rsi_14.toFixed(1)}</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">MACD</div>
+                        <div class="value ${stock.macd_bull === '多' ? 'up' : 'down'}">${stock.macd_bull}</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">MA5斜率</div>
+                        <div class="value ${stock.ma5_slope > 0 ? 'up' : 'down'}">${stock.ma5_slope > 0 ? '+' : ''}${stock.ma5_slope.toFixed(2)}%</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">量比</div>
+                        <div class="value">${stock.vol_today_ratio.toFixed(2)}</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">20日均额</div>
+                        <div class="value" style="font-size:12px">${avgAmountWan}万</div>
+                    </div>
+                    <div class="metric">
+                        <div class="label">布林位置</div>
+                        <div class="value">${(stock.bb_pos * 100).toFixed(0)}%</div>
+                    </div>
+                </div>
+
+                <div class="reasons">
+                    <div class="reasons-label">技术理由</div>
+                    <div class="reasons-tags">
+                        ${reasons.map(r => `<span class="reason-tag">${r}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Animate score bar
+            setTimeout(() => {
+                const fill = card.querySelector('.fill');
+                fill.style.width = fill.dataset.target + '%';
+            }, 100 + index * 80);
+
+            return card;
+        }
+
+        function reset() {
+            document.getElementById('resultsSection').classList.remove('active');
+            document.getElementById('startSection').style.display = 'block';
+            document.getElementById('btnStart').disabled = false;
+        }
+    </script>
+</body>
+</html>
