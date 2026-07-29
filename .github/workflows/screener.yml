@@ -2,15 +2,14 @@ name: A股选股筛选
 
 on:
   schedule:
-    # 每天 09:00 CST (01:00 UTC) 和 15:00 CST (07:00 UTC)
+    # 早上 09:00 CST (01:00 UTC) — 选股推荐
     - cron: '0 1 * * 1-5'
-    - cron: '0 7 * * 1-5'
+    # 下午 16:00 CST (08:00 UTC) — 结果验证
+    - cron: '0 8 * * 1-5'
   workflow_dispatch: # 支持手动触发
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   screener:
@@ -28,11 +27,14 @@ jobs:
         run: |
           pip install -r requirements.txt
 
+      # ===== 早上 09:00：选股 + 发推荐邮件 =====
       - name: 运行选股脚本
+        if: github.event.schedule == '0 1 * * 1-5' || github.event_name == 'workflow_dispatch'
         run: |
           python generate_results.py
 
       - name: 提交结果
+        if: github.event.schedule == '0 1 * * 1-5' || github.event_name == 'workflow_dispatch'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -40,9 +42,19 @@ jobs:
           git diff --staged --quiet || git commit -m "auto: update screener results $(date -u '+%Y-%m-%d %H:%M')"
           git push
 
-      - name: 发送邮件
+      - name: 发送选股邮件
+        if: github.event.schedule == '0 1 * * 1-5' || github.event_name == 'workflow_dispatch'
         env:
           QQ_MAIL_ADDR: ${{ secrets.QQ_MAIL_ADDR }}
           QQ_MAIL_AUTH: ${{ secrets.QQ_MAIL_AUTH }}
         run: |
           python send_email.py
+
+      # ===== 下午 16:00：验证预测结果 + 发对比邮件 =====
+      - name: 验证预测结果
+        if: github.event.schedule == '0 8 * * 1-5'
+        env:
+          QQ_MAIL_ADDR: ${{ secrets.QQ_MAIL_ADDR }}
+          QQ_MAIL_AUTH: ${{ secrets.QQ_MAIL_AUTH }}
+        run: |
+          python validate_results.py
