@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.stock_cache/
+outputs/
+.analysis_history.json
+.venv/
+venv/
