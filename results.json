@@ -1,112 +1,16 @@
 {
-  "update_time": "2026-07-29 19:14",
-  "win_rate": "5/5 (100.0%)",
+  "update_time": "2026-07-30 04:01",
+  "win_rate": "",
   "total_passed": 5,
   "stocks": [
-    {
-      "score": 79,
-      "code": "600507",
-      "name": "方大特钢",
-      "price": 4.56,
-      "hand_cost": 456.0,
-      "pe": 13.19,
-      "total_mv": 105.48,
-      "fzl": "55.6",
-      "jlr_tzb": "271380800.6",
-      "xjl": "0.3844",
-      "avg_amount_20d": 152361420.0,
-      "ma5": 4.348,
-      "ma10": 4.333,
-      "ma20": 4.231,
-      "ma5_slope": 0.69,
-      "ma10_slope": 4.92,
-      "ma20_slope": 0.46,
-      "bull_align": "是",
-      "macd_gold": "否",
-      "kdj_gold": "是",
-      "vol_expand": "是",
-      "vol_trend_up": "否",
-      "breakout": "是",
-      "consecutive_up": "否",
-      "on_ma5": "是",
-      "vol_ratio": 2.09,
-      "rsi_14": 60.7,
-      "macd_bull": "多",
-      "bb_pos": 1.0,
-      "tech_reason": "均线多头排列, 突破前高, KDJ金叉, 流动性充足, 站上5日线, 站上10日线, MA5上行, MA10上行, MA20趋稳, 温和放量, MACD多头, RSI有空间"
-    },
-    {
-      "score": 79,
-      "code": "600717",
-      "name": "天津港",
-      "price": 4.37,
-      "hand_cost": 437.0,
-      "pe": 11.95,
-      "total_mv": 126.47,
-      "fzl": "27.0",
-      "jlr_tzb": "113088870.9",
-      "xjl": "0.3377",
-      "avg_amount_20d": 98363250.0,
-      "ma5": 4.276,
-      "ma10": 4.268,
-      "ma20": 4.176,
-      "ma5_slope": 0.38,
-      "ma10_slope": 4.53,
-      "ma20_slope": 0.0,
-      "bull_align": "是",
-      "macd_gold": "否",
-      "kdj_gold": "是",
-      "vol_expand": "是",
-      "vol_trend_up": "否",
-      "breakout": "是",
-      "consecutive_up": "否",
-      "on_ma5": "是",
-      "vol_ratio": 1.24,
-      "rsi_14": 55.2,
-      "macd_bull": "多",
-      "bb_pos": 0.93,
-      "tech_reason": "均线多头排列, 突破前高, KDJ金叉, 流动性充足, 站上5日线, 站上10日线, MA5上行, MA10上行, MA20趋稳, 温和放量, MACD多头, RSI有空间"
-    },
-    {
-      "score": 76,
-      "code": "600361",
-      "name": "创新新材",
-      "price": 3.74,
-      "hand_cost": 374.0,
-      "pe": 16.52,
-      "total_mv": 139.6,
-      "fzl": "51.9",
-      "jlr_tzb": "65654082.1",
-      "xjl": "0.9154",
-      "avg_amount_20d": 169941770.0,
-      "ma5": 3.642,
-      "ma10": 3.589,
-      "ma20": 3.558,
-      "ma5_slope": 3.0,
-      "ma10_slope": 1.73,
-      "ma20_slope": -11.1,
-      "bull_align": "是",
-      "macd_gold": "否",
-      "kdj_gold": "是",
-      "vol_expand": "是",
-      "vol_trend_up": "否",
-      "breakout": "是",
-      "consecutive_up": "否",
-      "on_ma5": "是",
-      "vol_ratio": 1.64,
-      "rsi_14": 51.6,
-      "macd_bull": "多",
-      "bb_pos": 1.0,
-      "tech_reason": "均线多头排列, 突破前高, KDJ金叉, 流动性充足, 站上5日线, 站上10日线, MA5上行, MA10上行, 温和放量, MACD多头, RSI有空间"
-    },
     {
       "score": 76,
       "code": "600575",
       "name": "淮河能源",
-      "price": 3.43,
-      "hand_cost": 343.0,
-      "pe": 15.8,
-      "total_mv": 245.82,
+      "price": 3.48,
+      "hand_cost": 348.0,
+      "pe": 16.03,
+      "total_mv": 249.4,
       "fzl": "47.5",
       "jlr_tzb": "64337276.2",
       "xjl": "0.0216",
@@ -135,10 +39,10 @@
       "score": 72,
       "code": "002075",
       "name": "沙钢股份",
-      "price": 3.63,
-      "hand_cost": 363.0,
-      "pe": 31.84,
-      "total_mv": 79.64,
+      "price": 3.68,
+      "hand_cost": 368.0,
+      "pe": 32.28,
+      "total_mv": 80.73,
       "fzl": "54.3",
       "jlr_tzb": "98274278.7",
       "xjl": "0.0919",
@@ -162,99 +66,139 @@
       "macd_bull": "多",
       "bb_pos": 1.0,
       "tech_reason": "均线多头排列, 突破前高, 流动性充足, 站上5日线, 站上10日线, MA5上行, MA10上行, 温和放量, 连续小阳, MACD多头, RSI有空间"
+    },
+    {
+      "score": 69,
+      "code": "002570",
+      "name": "贝因美",
+      "price": 4.35,
+      "hand_cost": 435.0,
+      "pe": 31.27,
+      "total_mv": 46.98,
+      "fzl": "58.3",
+      "jlr_tzb": "12953651.3",
+      "xjl": "0.0033",
+      "avg_amount_20d": 90898640.0,
+      "ma5": 4.096,
+      "ma10": 4.113,
+      "ma20": 4.076,
+      "ma5_slope": -0.82,
+      "ma10_slope": 1.83,
+      "ma20_slope": -13.94,
+      "bull_align": "否",
+      "macd_gold": "否",
+      "kdj_gold": "是",
+      "vol_expand": "是",
+      "vol_trend_up": "是",
+      "breakout": "是",
+      "consecutive_up": "是",
+      "on_ma5": "是",
+      "vol_ratio": 2.1,
+      "rsi_14": 52.0,
+      "macd_bull": "多",
+      "bb_pos": 1.0,
+      "tech_reason": "突破前高, KDJ金叉, 流动性充足, 站上5日线, 站上10日线, MA10上行, 温和放量, 量能递增, 连续小阳, MACD多头, RSI有空间"
+    },
+    {
+      "score": 66,
+      "code": "000690",
+      "name": "宝新能源",
+      "price": 4.97,
+      "hand_cost": 497.0,
+      "pe": 10.45,
+      "total_mv": 108.14,
+      "fzl": "41.4",
+      "jlr_tzb": "122809142.6",
+      "xjl": "0.2755",
+      "avg_amount_20d": 333647625.0,
+      "ma5": 4.93,
+      "ma10": 4.866,
+      "ma20": 4.728,
+      "ma5_slope": 2.67,
+      "ma10_slope": 5.99,
+      "ma20_slope": -8.23,
+      "bull_align": "是",
+      "macd_gold": "否",
+      "kdj_gold": "否",
+      "vol_expand": "是",
+      "vol_trend_up": "否",
+      "breakout": "是",
+      "consecutive_up": "否",
+      "on_ma5": "是",
+      "vol_ratio": 2.25,
+      "rsi_14": 54.9,
+      "macd_bull": "多",
+      "bb_pos": 1.0,
+      "tech_reason": "均线多头排列, 突破前高, 流动性充足, 站上5日线, 站上10日线, MA5上行, MA10上行, 温和放量, MACD多头, RSI有空间"
+    },
+    {
+      "score": 56,
+      "code": "600219",
+      "name": "南山铝业",
+      "price": 4.58,
+      "hand_cost": 458.0,
+      "pe": 12.73,
+      "total_mv": 525.95,
+      "fzl": "22.2",
+      "jlr_tzb": "293436776.1",
+      "xjl": "0.0436",
+      "avg_amount_20d": 938903945.0,
+      "ma5": 4.566,
+      "ma10": 4.359,
+      "ma20": 4.223,
+      "ma5_slope": 9.97,
+      "ma10_slope": 6.63,
+      "ma20_slope": -7.15,
+      "bull_align": "是",
+      "macd_gold": "否",
+      "kdj_gold": "是",
+      "vol_expand": "否",
+      "vol_trend_up": "否",
+      "breakout": "否",
+      "consecutive_up": "否",
+      "on_ma5": "是",
+      "vol_ratio": 1.11,
+      "rsi_14": 55.4,
+      "macd_bull": "多",
+      "bb_pos": 0.91,
+      "tech_reason": "均线多头排列, KDJ金叉, 流动性充足, 站上5日线, 站上10日线, MA5上行, MA10上行, MACD多头, RSI有空间"
     }
   ],
   "watchlist": [
     {
-      "code": "600507",
-      "tencent_code": "sh600507",
-      "name": "方大特钢",
-      "price": 4.56,
-      "pe": 13.19
-    },
-    {
-      "code": "600717",
-      "tencent_code": "sh600717",
-      "name": "天津港",
-      "price": 4.37,
-      "pe": 11.95
-    },
-    {
-      "code": "600361",
-      "tencent_code": "sh600361",
-      "name": "创新新材",
-      "price": 3.74,
-      "pe": 16.52
-    },
-    {
       "code": "600575",
       "tencent_code": "sh600575",
       "name": "淮河能源",
-      "price": 3.43,
-      "pe": 15.8
+      "price": 3.48,
+      "pe": 16.03
     },
     {
       "code": "2075",
       "tencent_code": "sz2075",
       "name": "沙钢股份",
-      "price": 3.63,
-      "pe": 31.84
+      "price": 3.68,
+      "pe": 32.28
     },
     {
       "code": "2570",
       "tencent_code": "sz2570",
       "name": "贝因美",
-      "price": 4.28,
-      "pe": 30.77
+      "price": 4.35,
+      "pe": 31.27
     },
     {
-      "code": "2226",
-      "tencent_code": "sz2226",
-      "name": "江南化工",
-      "price": 4.88,
-      "pe": 17.57
-    },
-    {
-      "code": "603866",
-      "tencent_code": "sh603866",
-      "name": "桃李面包",
-      "price": 4.24,
-      "pe": 26.95
-    },
-    {
-      "code": "2108",
-      "tencent_code": "sz2108",
-      "name": "沧州明珠",
-      "price": 4.33,
-      "pe": 47.75
-    },
-    {
-      "code": "601968",
-      "tencent_code": "sh601968",
-      "name": "宝钢包装",
-      "price": 4.45,
-      "pe": 29.0
-    },
-    {
-      "code": "601216",
-      "tencent_code": "sh601216",
-      "name": "君正集团",
-      "price": 4.74,
-      "pe": 13.21
+      "code": "690",
+      "tencent_code": "sh690",
+      "name": "宝新能源",
+      "price": 4.97,
+      "pe": 10.45
     },
     {
       "code": "600219",
       "tencent_code": "sh600219",
       "name": "南山铝业",
-      "price": 4.59,
-      "pe": 12.75
-    },
-    {
-      "code": "2540",
-      "tencent_code": "sz2540",
-      "name": "亚太科技",
-      "price": 4.94,
-      "pe": 16.59
+      "price": 4.58,
+      "pe": 12.73
     },
     {
       "code": "601388",
@@ -264,109 +208,74 @@
       "pe": 32.64
     },
     {
-      "code": "601002",
-      "tencent_code": "sh601002",
-      "name": "晋亿实业",
-      "price": 4.89,
-      "pe": 18.18
-    },
-    {
       "code": "2303",
       "tencent_code": "sz2303",
       "name": "美盈森",
-      "price": 4.44,
-      "pe": 28.1
+      "price": 4.31,
+      "pe": 27.28
     },
     {
       "code": "300043",
       "tencent_code": "sz300043",
       "name": "星辉娱乐",
-      "price": 4.68,
-      "pe": 14.52
-    },
-    {
-      "code": "589",
-      "tencent_code": "sz589",
-      "name": "贵州轮胎",
-      "price": 4.36,
-      "pe": 9.23
-    },
-    {
-      "code": "2454",
-      "tencent_code": "sz2454",
-      "name": "松芝股份",
-      "price": 4.86,
-      "pe": 18.94
+      "price": 4.56,
+      "pe": 14.15
     },
     {
       "code": "570",
       "tencent_code": "sz570",
       "name": "苏常柴Ａ",
-      "price": 4.92,
-      "pe": 42.6
+      "price": 4.9,
+      "pe": 42.43
     },
     {
-      "code": "2004",
-      "tencent_code": "sz2004",
-      "name": "华邦健康",
-      "price": 4.35,
-      "pe": 12.6
+      "code": "589",
+      "tencent_code": "sz589",
+      "name": "贵州轮胎",
+      "price": 4.37,
+      "pe": 9.25
     },
     {
       "code": "600572",
       "tencent_code": "sh600572",
       "name": "康恩贝",
-      "price": 4.34,
-      "pe": 22.79
+      "price": 4.32,
+      "pe": 22.69
     },
     {
       "code": "2228",
       "tencent_code": "sz2228",
       "name": "合兴包装",
-      "price": 3.04,
-      "pe": 39.07
+      "price": 3.07,
+      "pe": 39.45
     },
     {
       "code": "601975",
       "tencent_code": "sh601975",
       "name": "招商南油",
-      "price": 3.6,
-      "pe": 11.55
+      "price": 3.62,
+      "pe": 11.61
     },
     {
       "code": "600863",
       "tencent_code": "sh600863",
       "name": "华能蒙电",
-      "price": 4.84,
-      "pe": 16.73
+      "price": 4.75,
+      "pe": 16.42
     },
     {
       "code": "601016",
       "tencent_code": "sh601016",
       "name": "节能风电",
-      "price": 3.58,
-      "pe": 47.06
-    },
-    {
-      "code": "600866",
-      "tencent_code": "sh600866",
-      "name": "星湖科技",
-      "price": 4.62,
-      "pe": 16.77
-    },
-    {
-      "code": "2016",
-      "tencent_code": "sz2016",
-      "name": "世荣兆业",
-      "price": 4.22,
-      "pe": 22.48
+      "price": 3.5,
+      "pe": 46.0
     },
     {
       "code": "2397",
       "tencent_code": "sz2397",
       "name": "梦洁股份",
-      "price": 3.42,
-      "pe": 45.75
+      "price": 3.37,
+      "pe": 45.08
     }
   ]
 }
