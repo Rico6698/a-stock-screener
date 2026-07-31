@@ -2,10 +2,22 @@ name: A股选股筛选
 
 on:
   schedule:
-    # 早上 09:05 CST (01:05 UTC) — 选股推荐（避开整点高峰）
-    - cron: '5 1 * * 1-5'
-    # 下午 16:05 CST (08:05 UTC) — 结果验证
-    - cron: '5 8 * * 1-5'
+    # ===== 早上：选股模式，多重触发确保 9:40 前完成 =====
+    # CST 05:00 = UTC 21:00 (前一天)
+    - cron: '0 21 * * 0-4'
+    # CST 06:00 = UTC 22:00 (前一天)
+    - cron: '0 22 * * 0-4'
+    # CST 07:00 = UTC 23:00 (前一天)
+    - cron: '0 23 * * 0-4'
+    # CST 08:00 = UTC 00:00
+    - cron: '0 0 * * 1-5'
+    # CST 09:00 = UTC 01:00
+    - cron: '0 1 * * 1-5'
+    # ===== 下午：验证模式 =====
+    # CST 15:00 = UTC 07:00
+    - cron: '0 7 * * 1-5'
+    # CST 16:00 = UTC 08:00
+    - cron: '0 8 * * 1-5'
   workflow_dispatch:
     inputs:
       mode:
@@ -36,14 +48,52 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      # ===== 早上：选股 + 发推荐邮件 =====
+      - name: 判断模式与是否已完成
+        id: check
+        run: |
+          python -c "
+          import json, os
+          from datetime import datetime
+
+          SCHEDULE = '${{ github.event.schedule }}'
+          EVENT = '${{ github.event_name }}'
+          MODE_INPUT = '${{ github.event.inputs.mode }}'
+
+          # 早上 cron 列表
+          MORNING_CRONS = ['0 21 * * 0-4', '0 22 * * 0-4', '0 23 * * 0-4', '0 0 * * 1-5', '0 1 * * 1-5']
+          # 下午 cron 列表
+          AFTERNOON_CRONS = ['0 7 * * 1-5', '0 8 * * 1-5']
+
+          if EVENT == 'workflow_dispatch':
+              mode = MODE_INPUT or 'screener'
+          elif SCHEDULE in MORNING_CRONS:
+              mode = 'screener'
+          elif SCHEDULE in AFTERNOON_CRONS:
+              mode = 'validation'
+          else:
+              mode = 'screener'
+
+          # 检查今天是否已完成
+          today = datetime.now().strftime('%Y-%m-%d')
+          already_done = False
+          if mode == 'screener' and os.path.exists('results.json'):
+              with open('results.json') as f:
+                  d = json.load(f)
+              if d.get('update_time', '').startswith(today):
+                  already_done = True
+
+          print(f'mode={mode}')
+          print(f'already_done={str(already_done).lower()}')
+          " >> "$GITHUB_OUTPUT"
+
+      # ===== 选股模式（早上，幂等：已完成则跳过） =====
       - name: 运行选股脚本
-        if: github.event.schedule == '5 1 * * 1-5' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'screener')
+        if: steps.check.outputs.mode == 'screener' && steps.check.outputs.already_done != 'true'
         run: |
           python generate_results.py
 
       - name: 提交结果
-        if: github.event.schedule == '5 1 * * 1-5' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'screener')
+        if: steps.check.outputs.mode == 'screener' && steps.check.outputs.already_done != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -53,16 +103,21 @@ jobs:
           git push
 
       - name: 发送选股邮件
-        if: github.event.schedule == '5 1 * * 1-5' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'screener')
+        if: steps.check.outputs.mode == 'screener' && steps.check.outputs.already_done != 'true'
         env:
           QQ_MAIL_ADDR: ${{ secrets.QQ_MAIL_ADDR }}
           QQ_MAIL_AUTH: ${{ secrets.QQ_MAIL_AUTH }}
         run: |
           python send_email.py
 
-      # ===== 下午：验证预测结果 + 发对比邮件 =====
+      - name: 跳过提示（今日已完成）
+        if: steps.check.outputs.mode == 'screener' && steps.check.outputs.already_done == 'true'
+        run: |
+          echo "今日选股已完成，跳过本次运行"
+
+      # ===== 验证模式（下午） =====
       - name: 验证预测结果
-        if: github.event.schedule == '5 8 * * 1-5' || (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'validation')
+        if: steps.check.outputs.mode == 'validation'
         env:
           QQ_MAIL_ADDR: ${{ secrets.QQ_MAIL_ADDR }}
           QQ_MAIL_AUTH: ${{ secrets.QQ_MAIL_AUTH }}
