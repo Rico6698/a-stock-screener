@@ -2,7 +2,9 @@ name: A股选股筛选
 
 on:
   schedule:
-    # ===== 早上：选股模式，多重触发确保 9:40 前完成 =====
+    # ===== 早上：选股模式，多重触发确保覆盖延迟 =====
+    # CST 04:00 = UTC 20:00 (前一天)
+    - cron: '0 20 * * 0-4'
     # CST 05:00 = UTC 21:00 (前一天)
     - cron: '0 21 * * 0-4'
     # CST 06:00 = UTC 22:00 (前一天)
@@ -11,12 +13,8 @@ on:
     - cron: '0 23 * * 0-4'
     # CST 08:00 = UTC 00:00
     - cron: '0 0 * * 1-5'
-    # CST 09:00 = UTC 01:00
-    - cron: '0 1 * * 1-5'
     # ===== 下午：验证模式 =====
-    # CST 15:00 = UTC 07:00
     - cron: '0 7 * * 1-5'
-    # CST 16:00 = UTC 08:00
     - cron: '0 8 * * 1-5'
   workflow_dispatch:
     inputs:
@@ -35,6 +33,7 @@ permissions:
 jobs:
   screener:
     runs-on: ubuntu-latest
+    timeout-minutes: 360
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
@@ -48,52 +47,84 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: 判断模式与是否已完成
-        id: check
+      - name: 判断模式
+        id: mode
         run: |
           python -c "
-          import json, os
-          from datetime import datetime
-
           SCHEDULE = '${{ github.event.schedule }}'
           EVENT = '${{ github.event_name }}'
           MODE_INPUT = '${{ github.event.inputs.mode }}'
 
-          # 早上 cron 列表
-          MORNING_CRONS = ['0 21 * * 0-4', '0 22 * * 0-4', '0 23 * * 0-4', '0 0 * * 1-5', '0 1 * * 1-5']
-          # 下午 cron 列表
-          AFTERNOON_CRONS = ['0 7 * * 1-5', '0 8 * * 1-5']
+          MORNING = ['0 20 * * 0-4', '0 21 * * 0-4', '0 22 * * 0-4', '0 23 * * 0-4', '0 0 * * 1-5']
+          AFTERNOON = ['0 7 * * 1-5', '0 8 * * 1-5']
 
           if EVENT == 'workflow_dispatch':
-              mode = MODE_INPUT or 'screener'
-          elif SCHEDULE in MORNING_CRONS:
-              mode = 'screener'
-          elif SCHEDULE in AFTERNOON_CRONS:
-              mode = 'validation'
+              m = MODE_INPUT or 'screener'
+          elif SCHEDULE in MORNING:
+              m = 'screener'
+          elif SCHEDULE in AFTERNOON:
+              m = 'validation'
           else:
-              mode = 'screener'
+              m = 'screener'
+          print(f'mode={m}')
+          " >> "$GITHUB_OUTPUT"
 
-          # 检查今天是否已完成
-          today = datetime.now().strftime('%Y-%m-%d')
+      # ===== 早上：等待到 9:20 CST 再运行 =====
+      - name: 等待至 9:20 CST（时间门控）
+        if: steps.mode.outputs.mode == 'screener'
+        id: wait
+        run: |
+          python -c "
+          from datetime import datetime, timezone, timedelta
+          import time, os, json
+
+          CST = timezone(timedelta(hours=8))
+          now = datetime.now(CST)
+
+          # 目标时间：今天 9:20 CST
+          target = now.replace(hour=9, minute=20, second=0, microsecond=0)
+          # 截止时间：今天 9:40 CST
+          deadline = now.replace(hour=9, minute=40, second=0, microsecond=0)
+
+          # 检查是否已完成
+          today = now.strftime('%Y-%m-%d')
           already_done = False
-          if mode == 'screener' and os.path.exists('results.json'):
+          if os.path.exists('results.json'):
               with open('results.json') as f:
                   d = json.load(f)
               if d.get('update_time', '').startswith(today):
                   already_done = True
 
-          print(f'mode={mode}')
-          print(f'already_done={str(already_done).lower()}')
-          " >> "$GITHUB_OUTPUT"
+          if already_done:
+              print('今日已完成，跳过')
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write('skip=true\n')
+          elif now < target:
+              # 还没到 9:20，等待
+              wait_seconds = (target - now).total_seconds()
+              print(f'当前 {now.strftime(\"%H:%M\")} CST，等待 {wait_seconds:.0f} 秒至 9:20...')
+              time.sleep(min(wait_seconds, 14400))  # 最多等4小时
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write('skip=false\n')
+          elif now > deadline:
+              # 超过 9:40，仍运行但标记超时
+              print(f'当前 {now.strftime(\"%H:%M\")} CST，已超过 9:40 截止时间')
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write('skip=false\n')
+          else:
+              # 在 9:20-9:40 之间，立即运行
+              print(f'当前 {now.strftime(\"%H:%M\")} CST，在目标时间窗口内，立即运行')
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write('skip=false\n')
+          "
 
-      # ===== 选股模式（早上，幂等：已完成则跳过） =====
       - name: 运行选股脚本
-        if: steps.check.outputs.mode == 'screener' && steps.check.outputs.already_done != 'true'
+        if: steps.mode.outputs.mode == 'screener' && steps.wait.outputs.skip != 'true'
         run: |
           python generate_results.py
 
       - name: 提交结果
-        if: steps.check.outputs.mode == 'screener' && steps.check.outputs.already_done != 'true'
+        if: steps.mode.outputs.mode == 'screener' && steps.wait.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -103,21 +134,21 @@ jobs:
           git push
 
       - name: 发送选股邮件
-        if: steps.check.outputs.mode == 'screener' && steps.check.outputs.already_done != 'true'
+        if: steps.mode.outputs.mode == 'screener' && steps.wait.outputs.skip != 'true'
         env:
           QQ_MAIL_ADDR: ${{ secrets.QQ_MAIL_ADDR }}
           QQ_MAIL_AUTH: ${{ secrets.QQ_MAIL_AUTH }}
         run: |
           python send_email.py
 
-      - name: 跳过提示（今日已完成）
-        if: steps.check.outputs.mode == 'screener' && steps.check.outputs.already_done == 'true'
+      - name: 跳过提示
+        if: steps.mode.outputs.mode == 'screener' && steps.wait.outputs.skip == 'true'
         run: |
           echo "今日选股已完成，跳过本次运行"
 
-      # ===== 验证模式（下午） =====
+      # ===== 下午：验证模式 =====
       - name: 验证预测结果
-        if: steps.check.outputs.mode == 'validation'
+        if: steps.mode.outputs.mode == 'validation'
         env:
           QQ_MAIL_ADDR: ${{ secrets.QQ_MAIL_ADDR }}
           QQ_MAIL_AUTH: ${{ secrets.QQ_MAIL_AUTH }}
