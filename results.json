@@ -1,27 +1,27 @@
 {
-  "update_time": "2026-08-05 01:49",
+  "update_time": "2026-08-06 01:49",
   "win_rate": "",
   "total_passed": 1,
   "stocks": [
     {
-      "score": 46,
-      "code": "601975",
-      "name": "招商南油",
-      "price": 3.66,
-      "hand_cost": 366.0,
-      "pe": 11.74,
-      "total_mv": 171.3,
-      "fzl": "22.0",
-      "jlr_tzb": "758924154.0",
-      "xjl": "0.1238",
-      "avg_amount_20d": 604281864.0,
-      "ma5": 3.678,
-      "ma10": 3.626,
-      "ma20": 3.534,
-      "ma5_slope": 2.91,
-      "ma10_slope": 5.38,
-      "ma20_slope": -14.32,
-      "bull_align": "是",
+      "score": 37,
+      "code": "300043",
+      "name": "星辉娱乐",
+      "price": 4.97,
+      "hand_cost": 497.0,
+      "pe": 15.42,
+      "total_mv": 61.84,
+      "fzl": "56.9",
+      "jlr_tzb": "13205367.9",
+      "xjl": "0.0796",
+      "avg_amount_20d": 359667030.0,
+      "ma5": 4.788,
+      "ma10": 4.617,
+      "ma20": 4.715,
+      "ma5_slope": 7.69,
+      "ma10_slope": -4.05,
+      "ma20_slope": 6.07,
+      "bull_align": "否",
       "macd_gold": "否",
       "kdj_gold": "否",
       "vol_expand": "否",
@@ -29,20 +29,20 @@
       "breakout": "否",
       "consecutive_up": "否",
       "on_ma5": "是",
-      "vol_ratio": 0.3,
-      "rsi_14": 51.6,
+      "vol_ratio": 0.68,
+      "rsi_14": 56.7,
       "macd_bull": "多",
-      "bb_pos": 0.8,
-      "tech_reason": "均线多头排列, 流动性充足, 站上5日线, 站上10日线, MA5上行, MA10上行, MACD多头, RSI有空间"
+      "bb_pos": 0.66,
+      "tech_reason": "流动性充足, 站上5日线, 站上10日线, MA5上行, MA20趋稳, MACD多头, RSI有空间, 布林中上轨"
     }
   ],
   "watchlist": [
     {
-      "code": "601975",
-      "tencent_code": "sh601975",
-      "name": "招商南油",
-      "price": 3.66,
-      "pe": 11.74
+      "code": "300043",
+      "tencent_code": "sz300043",
+      "name": "星辉娱乐",
+      "price": 4.97,
+      "pe": 15.42
     }
   ]
 }
