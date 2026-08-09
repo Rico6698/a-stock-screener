@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """
-validate_results.py - 读取早上推荐结果，获取收盘价，对比预测验证，发邮件
+validate_results.py - 读取早上推荐结果，获取收盘价，对比预测验证，通过 Resend API 发邮件
 """
 
 import json
 import os
-import smtplib
+import requests
 import akshare as ak
 import pandas as pd
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 from datetime import datetime
+
+
+RESEND_URL = "https://api.resend.com/emails"
+FROM_ADDR = "A股选股 <onboarding@resend.dev>"
 
 
 def load_results():
@@ -54,6 +56,13 @@ def generate_validation_html(data, current_prices):
     stocks = data.get("stocks", [])
     update_time = data.get("update_time", "")
     today = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+    if not stocks:
+        return f"""<html><body style="font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;max-width:600px;margin:0 auto;padding:16px;background:#f5f5f7">
+<h2 style="color:#1a1a1a;text-align:center;margin-bottom:4px">📈 选股验证报告</h2>
+<p style="text-align:center;color:#8c8c8c;font-size:13px;margin-bottom:16px">{today}</p>
+<div style="background:#fff;border-radius:12px;padding:24px;text-align:center;color:#8c8c8c">今日无推荐数据可验证。</div>
+</body></html>"""
 
     cards = ""
     verified = 0
@@ -142,31 +151,50 @@ def generate_validation_html(data, current_prices):
 </body></html>"""
 
 
-def send_email(html_content, subject, to_addr, smtp_auth):
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = subject
-    msg["From"] = to_addr
-    msg["To"] = to_addr
-    msg.attach(MIMEText(html_content, "html", "utf-8"))
-
-    server = smtplib.SMTP_SSL("smtp.qq.com", 465)
-    server.login(to_addr, smtp_auth)
-    server.sendmail(to_addr, [to_addr], msg.as_string())
-    server.quit()
-    print(f">>> 验证邮件已发送至 {to_addr}")
+def send_email(html_content, subject, to_addr):
+    api_key = os.environ.get("RESEND_API_KEY", "")
+    if not api_key:
+        print("!!! RESEND_API_KEY 环境变量未设置，跳过发送")
+        return False
+    try:
+        resp = requests.post(
+            RESEND_URL,
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "from": FROM_ADDR,
+                "to": [to_addr],
+                "subject": subject,
+                "html": html_content,
+            },
+            timeout=30,
+        )
+    except Exception as e:
+        print(f"!!! Resend 请求异常: {e}")
+        return False
+    if resp.status_code >= 400:
+        print(f"!!! Resend 发送失败: {resp.status_code} {resp.text}")
+        return False
+    try:
+        rid = resp.json().get("id", "")
+    except Exception:
+        rid = ""
+    print(f">>> 验证邮件已发送至 {to_addr} (id={rid})")
+    return True
 
 
 def main():
     data = load_results()
     stocks = data.get("stocks", [])
 
-    if not stocks:
-        print("!!! 无推荐数据可验证")
-        return
-
     print(f">>> 加载 {len(stocks)} 只推荐股票")
+    if not stocks:
+        print(">>> 无推荐数据，仍发送空报告")
+
     codes = [s["code"] for s in stocks]
-    current_prices = fetch_current_prices(codes)
+    current_prices = fetch_current_prices(codes) if codes else {}
     print(f">>> 获取到 {len(current_prices)}/{len(codes)} 只现价")
 
     html = generate_validation_html(data, current_prices)
@@ -175,14 +203,11 @@ def main():
     correct = sum(1 for s in stocks if current_prices.get(s["code"], 0) >= s["price"])
     subject = f"📈 选股验证 {today} | 正确 {correct}/{len(stocks)}"
 
-    to_addr = os.environ.get("QQ_MAIL_ADDR", "3405947985@qq.com")
-    smtp_auth = os.environ.get("QQ_MAIL_AUTH", "")
+    to_addr = os.environ.get("MAIL_TO_ADDR") or os.environ.get("QQ_MAIL_ADDR", "3405947985@qq.com")
 
-    if not smtp_auth:
-        print("!!! QQ_MAIL_AUTH 环境变量未设置")
-        return
-
-    send_email(html, subject, to_addr, smtp_auth)
+    ok = send_email(html, subject, to_addr)
+    if not ok:
+        print("!!! 邮件发送失败")
 
 
 if __name__ == "__main__":
