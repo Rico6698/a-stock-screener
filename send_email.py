@@ -1,14 +1,21 @@
 #!/usr/bin/env python3
 """
-send_email.py - 读取 results.json，生成 HTML 邮件并发送到 QQ 邮箱
+send_email.py - 读取 results.json，生成 HTML 邮件并通过 Resend API 发送
+
+改用 Resend HTTP API 而非 SMTP，原因：
+QQ 邮箱 SMTP 对境外 IP（GitHub Actions 美国机房）有反垃圾封锁，
+smtplib.login() 时会被服务器主动关闭连接。
+Resend 走 HTTPS，不受 IP 封锁影响。
 """
 
 import json
 import os
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import requests
 from datetime import datetime
+
+
+RESEND_URL = "https://api.resend.com/emails"
+FROM_ADDR = "A股选股 <onboarding@resend.dev>"
 
 
 def generate_html(data):
@@ -16,6 +23,16 @@ def generate_html(data):
     update_time = data.get("update_time", "")
     win_rate = data.get("win_rate", "")
     total = data.get("total_passed", len(stocks))
+
+    if not stocks:
+        return f"""<html><body style="font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;max-width:600px;margin:0 auto;padding:16px;background:#f5f5f7">
+<h2 style="color:#1a1a1a;text-align:center;margin-bottom:4px">📊 A股选股结果</h2>
+<p style="text-align:center;color:#8c8c8c;font-size:13px;margin-bottom:16px">{update_time} · 通过 0 只</p>
+<div style="background:#fff;border-radius:12px;padding:24px;margin-bottom:10px;text-align:center;color:#8c8c8c">
+今日无符合条件股票，建议放宽参数或择日再筛。
+</div>
+<p style="text-align:center;font-size:11px;color:#8c8c8c;margin-top:16px;line-height:1.6">本工具仅做客观数据筛选，不构成任何投资建议。<br>入市有风险，投资需谨慎。</p>
+</body></html>"""
 
     cards = ""
     for i, s in enumerate(stocks):
@@ -62,18 +79,38 @@ def generate_html(data):
 </body></html>"""
 
 
-def send_email(html_content, subject, to_addr, smtp_addr, smtp_auth):
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = subject
-    msg["From"] = to_addr
-    msg["To"] = to_addr
-    msg.attach(MIMEText(html_content, "html", "utf-8"))
-
-    server = smtplib.SMTP_SSL("smtp.qq.com", 465)
-    server.login(smtp_addr, smtp_auth)
-    server.sendmail(to_addr, [to_addr], msg.as_string())
-    server.quit()
-    print(f">>> 邮件已发送至 {to_addr}")
+def send_email(html_content, subject, to_addr):
+    api_key = os.environ.get("RESEND_API_KEY", "")
+    if not api_key:
+        print("!!! RESEND_API_KEY 环境变量未设置，跳过发送")
+        return False
+    try:
+        resp = requests.post(
+            RESEND_URL,
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "from": FROM_ADDR,
+                "to": [to_addr],
+                "subject": subject,
+                "html": html_content,
+            },
+            timeout=30,
+        )
+    except Exception as e:
+        print(f"!!! Resend 请求异常: {e}")
+        return False
+    if resp.status_code >= 400:
+        print(f"!!! Resend 发送失败: {resp.status_code} {resp.text}")
+        return False
+    try:
+        rid = resp.json().get("id", "")
+    except Exception:
+        rid = ""
+    print(f">>> 邮件已发送至 {to_addr} (id={rid})")
+    return True
 
 
 def main():
@@ -90,14 +127,12 @@ def main():
     today = datetime.now().strftime("%Y-%m-%d")
     subject = f"📊 A股选股结果 {today} | Top{len(stocks)}: {top_names}"
 
-    to_addr = os.environ.get("QQ_MAIL_ADDR", "3405947985@qq.com")
-    smtp_auth = os.environ.get("QQ_MAIL_AUTH", "")
+    to_addr = os.environ.get("MAIL_TO_ADDR") or os.environ.get("QQ_MAIL_ADDR", "3405947985@qq.com")
 
-    if not smtp_auth:
-        print("!!! QQ_MAIL_AUTH 环境变量未设置")
-        return
-
-    send_email(html, subject, to_addr, to_addr, smtp_auth)
+    ok = send_email(html, subject, to_addr)
+    if not ok:
+        # 发送失败不阻断工作流（结果已提交到仓库）
+        print("!!! 邮件发送失败，但结果已更新到 results.json")
 
 
 if __name__ == "__main__":
