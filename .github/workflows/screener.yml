@@ -2,19 +2,10 @@ name: A股选股筛选
 
 on:
   schedule:
-    # ===== 早上：选股模式，多重触发确保覆盖延迟 =====
-    # CST 04:00 = UTC 20:00 (前一天)
-    - cron: '0 20 * * 0-4'
-    # CST 05:00 = UTC 21:00 (前一天)
-    - cron: '0 21 * * 0-4'
-    # CST 06:00 = UTC 22:00 (前一天)
+    # 早上选股：UTC 22:00 (周日-周四) = CST 06:00 (周一-周五)
+    # 时间门控会等至 CST 09:20 再实际运行，每天仅触发一次
     - cron: '0 22 * * 0-4'
-    # CST 07:00 = UTC 23:00 (前一天)
-    - cron: '0 23 * * 0-4'
-    # CST 08:00 = UTC 00:00
-    - cron: '0 0 * * 1-5'
-    # ===== 下午：验证模式 =====
-    - cron: '0 7 * * 1-5'
+    # 下午验证：UTC 08:00 (周一-周五) = CST 16:00，每天仅触发一次
     - cron: '0 8 * * 1-5'
   workflow_dispatch:
     inputs:
@@ -54,15 +45,13 @@ jobs:
           SCHEDULE = '${{ github.event.schedule }}'
           EVENT = '${{ github.event_name }}'
           MODE_INPUT = '${{ github.event.inputs.mode }}'
-
-          MORNING = ['0 20 * * 0-4', '0 21 * * 0-4', '0 22 * * 0-4', '0 23 * * 0-4', '0 0 * * 1-5']
-          AFTERNOON = ['0 7 * * 1-5', '0 8 * * 1-5']
-
+          MORNING = '0 22 * * 0-4'
+          AFTERNOON = '0 8 * * 1-5'
           if EVENT == 'workflow_dispatch':
               m = MODE_INPUT or 'screener'
-          elif SCHEDULE in MORNING:
+          elif SCHEDULE == MORNING:
               m = 'screener'
-          elif SCHEDULE in AFTERNOON:
+          elif SCHEDULE == AFTERNOON:
               m = 'validation'
           else:
               m = 'screener'
@@ -80,13 +69,9 @@ jobs:
 
           CST = timezone(timedelta(hours=8))
           now = datetime.now(CST)
-
-          # 目标时间：今天 9:20 CST
           target = now.replace(hour=9, minute=20, second=0, microsecond=0)
-          # 截止时间：今天 9:40 CST
-          deadline = now.replace(hour=9, minute=40, second=0, microsecond=0)
 
-          # 检查是否已完成
+          # 幂等检查：当天已完成则跳过
           today = now.strftime('%Y-%m-%d')
           already_done = False
           if os.path.exists('results.json'):
@@ -100,20 +85,13 @@ jobs:
               with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
                   f.write('skip=true\n')
           elif now < target:
-              # 还没到 9:20，等待
               wait_seconds = (target - now).total_seconds()
               print(f'当前 {now.strftime(\"%H:%M\")} CST，等待 {wait_seconds:.0f} 秒至 9:20...')
               time.sleep(min(wait_seconds, 14400))  # 最多等4小时
               with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
                   f.write('skip=false\n')
-          elif now > deadline:
-              # 超过 9:40，仍运行但标记超时
-              print(f'当前 {now.strftime(\"%H:%M\")} CST，已超过 9:40 截止时间')
-              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
-                  f.write('skip=false\n')
           else:
-              # 在 9:20-9:40 之间，立即运行
-              print(f'当前 {now.strftime(\"%H:%M\")} CST，在目标时间窗口内，立即运行')
+              print(f'当前 {now.strftime(\"%H:%M\")} CST，已过 9:20，立即运行')
               with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
                   f.write('skip=false\n')
           "
@@ -136,8 +114,8 @@ jobs:
       - name: 发送选股邮件
         if: steps.mode.outputs.mode == 'screener' && steps.wait.outputs.skip != 'true'
         env:
-          QQ_MAIL_ADDR: ${{ secrets.QQ_MAIL_ADDR }}
-          QQ_MAIL_AUTH: ${{ secrets.QQ_MAIL_AUTH }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          MAIL_TO_ADDR: ${{ secrets.MAIL_TO_ADDR }}
         run: |
           python send_email.py
 
@@ -150,7 +128,7 @@ jobs:
       - name: 验证预测结果
         if: steps.mode.outputs.mode == 'validation'
         env:
-          QQ_MAIL_ADDR: ${{ secrets.QQ_MAIL_ADDR }}
-          QQ_MAIL_AUTH: ${{ secrets.QQ_MAIL_AUTH }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          MAIL_TO_ADDR: ${{ secrets.MAIL_TO_ADDR }}
         run: |
           python validate_results.py
