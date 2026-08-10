@@ -2,9 +2,9 @@ name: A股选股筛选
 
 on:
   schedule:
-    # 选股兜底：UTC 04:00 (周一-周五) = CST 12:00
-    # 主力靠 cron-job.org 在 CST 10:00 外部触发 workflow_dispatch（准时），此 schedule 仅兜底
-    - cron: '0 4 * * 1-5'
+    # 选股兜底：UTC 03:00 (周一-周五) = CST 11:00
+    # 主力靠 cron-job.org 在 CST 09:26 外部触发 workflow_dispatch（准时），此 schedule 仅兜底
+    - cron: '0 3 * * 1-5'
     # 下午验证：UTC 08:00 (周一-周五) = CST 16:00
     - cron: '0 8 * * 1-5'
   workflow_dispatch:
@@ -45,7 +45,7 @@ jobs:
           SCHEDULE = '${{ github.event.schedule }}'
           EVENT = '${{ github.event_name }}'
           MODE_INPUT = '${{ github.event.inputs.mode }}'
-          MORNING = '0 4 * * 1-5'
+          MORNING = '0 3 * * 1-5'
           AFTERNOON = '0 8 * * 1-5'
           if EVENT == 'workflow_dispatch':
               m = MODE_INPUT or 'screener'
@@ -58,8 +58,8 @@ jobs:
           print(f'mode={m}')
           " >> "$GITHUB_OUTPUT"
 
-      # ===== 选股：主力 10:00 CST 外部触发即跑；schedule 兜底 + 时间门控 =====
-      - name: 等待至 10:00 CST（时间门控）
+      # ===== 选股：主力 09:26 CST 外部触发即跑；schedule 兜底 + 时间门控 =====
+      - name: 等待至 09:26 CST（时间门控）
         if: steps.mode.outputs.mode == 'screener'
         id: wait
         run: |
@@ -69,7 +69,7 @@ jobs:
 
           CST = timezone(timedelta(hours=8))
           now = datetime.now(CST)
-          target = now.replace(hour=10, minute=0, second=0, microsecond=0)
+          target = now.replace(hour=9, minute=26, second=0, microsecond=0)
 
           # 幂等检查：当天已完成则跳过
           today = now.strftime('%Y-%m-%d')
@@ -86,12 +86,12 @@ jobs:
                   f.write('skip=true\n')
           elif now < target:
               wait_seconds = (target - now).total_seconds()
-              print(f'当前 {now.strftime(\"%H:%M\")} CST，等待 {wait_seconds:.0f} 秒至 10:00...')
+              print(f'当前 {now.strftime(\"%H:%M\")} CST，等待 {wait_seconds:.0f} 秒至 09:26...')
               time.sleep(min(wait_seconds, 14400))  # 最多等4小时
               with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
                   f.write('skip=false\n')
           else:
-              print(f'当前 {now.strftime(\"%H:%M\")} CST，已过 10:00，立即运行')
+              print(f'当前 {now.strftime(\"%H:%M\")} CST，已过 09:26，立即运行')
               with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
                   f.write('skip=false\n')
           "
