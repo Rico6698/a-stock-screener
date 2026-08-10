@@ -16,7 +16,7 @@ import pandas as pd
 from datetime import datetime
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-SCREENER = os.path.join(SCRIPT_DIR, "a_stock_screener_v4.py")
+SCREENER = os.path.join(SCRIPT_DIR, "a_stock_screener_v5.py")
 
 
 def main():
