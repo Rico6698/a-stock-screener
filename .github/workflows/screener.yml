@@ -2,11 +2,9 @@ name: A股选股筛选
 
 on:
   schedule:
-    # 选股兜底：UTC 03:00 (周一-周五) = CST 11:00
-    # 主力靠 cron-job.org 在 CST 09:26 外部触发 workflow_dispatch（准时），此 schedule 仅兜底
-    - cron: '0 3 * * 1-5'
-    # 下午验证：UTC 08:00 (周一-周五) = CST 16:00
-    - cron: '0 8 * * 1-5'
+    # 尾盘选股兜底：UTC 07:30 (周一-周五) = CST 15:30（收盘后数据完整）
+    # 主力靠 cron-job.org 在 CST 14:50 外部触发 workflow_dispatch（准时），此 schedule 仅兜底
+    - cron: '30 7 * * 1-5'
   workflow_dispatch:
     inputs:
       mode:
@@ -41,25 +39,17 @@ jobs:
       - name: 判断模式
         id: mode
         run: |
-          python -c "
-          SCHEDULE = '${{ github.event.schedule }}'
-          EVENT = '${{ github.event_name }}'
-          MODE_INPUT = '${{ github.event.inputs.mode }}'
-          MORNING = '0 3 * * 1-5'
-          AFTERNOON = '0 8 * * 1-5'
-          if EVENT == 'workflow_dispatch':
-              m = MODE_INPUT or 'screener'
-          elif SCHEDULE == MORNING:
-              m = 'screener'
-          elif SCHEDULE == AFTERNOON:
-              m = 'validation'
-          else:
-              m = 'screener'
-          print(f'mode={m}')
-          " >> "$GITHUB_OUTPUT"
+          MODE_INPUT='${{ github.event.inputs.mode }}'
+          EVENT='${{ github.event_name }}'
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            m="${MODE_INPUT:-screener}"
+          else
+            m="screener"
+          fi
+          echo "mode=$m" >> "$GITHUB_OUTPUT"
 
-      # ===== 选股：主力 09:26 CST 外部触发即跑；schedule 兜底 + 时间门控 =====
-      - name: 等待至 09:26 CST（时间门控）
+      # ===== 尾盘 14:50：先验证昨天推荐，再选今天推荐（T+1 收益验证） =====
+      - name: 等待至 14:50 CST（时间门控）
         if: steps.mode.outputs.mode == 'screener'
         id: wait
         run: |
@@ -69,9 +59,9 @@ jobs:
 
           CST = timezone(timedelta(hours=8))
           now = datetime.now(CST)
-          target = now.replace(hour=9, minute=26, second=0, microsecond=0)
+          target = now.replace(hour=14, minute=50, second=0, microsecond=0)
 
-          # 幂等检查：当天已完成则跳过
+          # 幂等检查：当天已选股则跳过（results.json 日期为今天）
           today = now.strftime('%Y-%m-%d')
           already_done = False
           if os.path.exists('results.json'):
@@ -81,21 +71,31 @@ jobs:
                   already_done = True
 
           if already_done:
-              print('今日已完成，跳过')
+              print('今日已选股，跳过')
               with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
                   f.write('skip=true\n')
           elif now < target:
               wait_seconds = (target - now).total_seconds()
-              print(f'当前 {now.strftime(\"%H:%M\")} CST，等待 {wait_seconds:.0f} 秒至 09:26...')
-              time.sleep(min(wait_seconds, 14400))  # 最多等4小时
+              print(f'当前 {now.strftime(\"%H:%M\")} CST，等待 {wait_seconds:.0f} 秒至 14:50...')
+              time.sleep(min(wait_seconds, 14400))
               with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
                   f.write('skip=false\n')
           else:
-              print(f'当前 {now.strftime(\"%H:%M\")} CST，已过 09:26，立即运行')
+              print(f'当前 {now.strftime(\"%H:%M\")} CST，已过 14:50，立即运行')
               with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
                   f.write('skip=false\n')
           "
 
+      # ---- 第一步：验证昨天推荐（此时 results.json 还是昨天的） ----
+      - name: 验证昨日推荐（T+1 收益）
+        if: steps.mode.outputs.mode == 'screener' && steps.wait.outputs.skip != 'true'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          MAIL_TO_ADDR: ${{ secrets.MAIL_TO_ADDR }}
+        run: |
+          python validate_results.py || echo "验证步骤异常（不阻断选股）"
+
+      # ---- 第二步：选出今天推荐（覆盖 results.json） ----
       - name: 运行选股脚本
         if: steps.mode.outputs.mode == 'screener' && steps.wait.outputs.skip != 'true'
         run: |
@@ -124,7 +124,7 @@ jobs:
         run: |
           echo "今日选股已完成，跳过本次运行"
 
-      # ===== 下午：验证模式 =====
+      # ===== 单独验证模式（手动测试用） =====
       - name: 验证预测结果
         if: steps.mode.outputs.mode == 'validation'
         env:
