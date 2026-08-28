@@ -1,138 +1,27 @@
 {
-  "update_time": "2026-08-27 22:24",
+  "update_time": "2026-08-28 06:54",
   "win_rate": "",
   "total_passed": 5,
   "stocks": [
     {
-      "score": 79,
-      "code": "000937",
-      "name": "冀中能源",
-      "price": 5.14,
-      "hand_cost": 514.0,
-      "pe": 37.8,
-      "total_mv": 199.79,
-      "fzl": "51.4",
-      "jlr_tzb": "227266441.0",
-      "xjl": "0.1748",
-      "avg_amount_20d": 111309270.0,
-      "ma5": 4.892,
-      "ma10": 4.774,
-      "ma20": 4.738,
-      "ma5_slope": 5.07,
-      "ma10_slope": 1.53,
-      "ma20_slope": 4.7,
+      "score": 92,
+      "code": "600746",
+      "name": "江苏索普",
+      "price": 7.15,
+      "hand_cost": 715.0,
+      "pe": 34.81,
+      "total_mv": 83.5,
+      "fzl": "20.4",
+      "jlr_tzb": "48097795.0",
+      "xjl": "0.2265",
+      "avg_amount_20d": 105881055.0,
+      "ma5": 6.858,
+      "ma10": 6.741,
+      "ma20": 6.709,
+      "ma5_slope": 3.53,
+      "ma10_slope": 0.96,
+      "ma20_slope": 11.61,
       "bull_align": "是",
-      "macd_gold": "否",
-      "kdj_gold": "否",
-      "vol_expand": "是",
-      "vol_trend_up": "否",
-      "breakout": "是",
-      "consecutive_up": "是",
-      "on_ma5": "是",
-      "vol_ratio": 2.25,
-      "rsi_14": 74.7,
-      "macd_bull": "多",
-      "bb_pos": 1.0,
-      "bias5": 5.07,
-      "gain_1d": 4.05,
-      "gain_5d": 9.59,
-      "gain_20d": 8.21,
-      "amplitude_20d": 2.56,
-      "tech_reason": "均线多头排列, 突破前高, 温和放量, 连续小阳, 站上5日线, 站上10日线, MA5上行, MA10上行, MA20趋稳, MACD多头, 流动性充足, 低波动稳健"
-    },
-    {
-      "score": 77,
-      "code": "002107",
-      "name": "沃华医药",
-      "price": 6.57,
-      "hand_cost": 657.0,
-      "pe": 31.97,
-      "total_mv": 37.92,
-      "fzl": "27.5",
-      "jlr_tzb": "44134455.3",
-      "xjl": "0.1412",
-      "avg_amount_20d": 71091665.0,
-      "ma5": 6.328,
-      "ma10": 6.365,
-      "ma20": 6.29,
-      "ma5_slope": -1.16,
-      "ma10_slope": 2.4,
-      "ma20_slope": 0.9,
-      "bull_align": "否",
-      "macd_gold": "是",
-      "kdj_gold": "是",
-      "vol_expand": "是",
-      "vol_trend_up": "否",
-      "breakout": "是",
-      "consecutive_up": "是",
-      "on_ma5": "是",
-      "vol_ratio": 1.38,
-      "rsi_14": 59.0,
-      "macd_bull": "多",
-      "bb_pos": 0.97,
-      "bias5": 3.82,
-      "gain_1d": 2.66,
-      "gain_5d": 1.39,
-      "gain_20d": 10.42,
-      "amplitude_20d": 3.24,
-      "tech_reason": "MACD金叉, 突破前高, KDJ金叉, 温和放量, 连续小阳, 站上5日线, 站上10日线, MA10上行, MA20趋稳, MACD多头, RSI有空间, 流动性充足"
-    },
-    {
-      "score": 77,
-      "code": "000088",
-      "name": "盐 田 港",
-      "price": 4.54,
-      "hand_cost": 454.0,
-      "pe": 15.83,
-      "total_mv": 236.06,
-      "fzl": "32.3",
-      "jlr_tzb": "16448830.8",
-      "xjl": "0.0028",
-      "avg_amount_20d": 104903755.0,
-      "ma5": 4.516,
-      "ma10": 4.489,
-      "ma20": 4.484,
-      "ma5_slope": 1.21,
-      "ma10_slope": 0.22,
-      "ma20_slope": 4.34,
-      "bull_align": "是",
-      "macd_gold": "是",
-      "kdj_gold": "否",
-      "vol_expand": "是",
-      "vol_trend_up": "否",
-      "breakout": "否",
-      "consecutive_up": "否",
-      "on_ma5": "是",
-      "vol_ratio": 1.23,
-      "rsi_14": 61.6,
-      "macd_bull": "多",
-      "bb_pos": 0.77,
-      "bias5": 0.53,
-      "gain_1d": -0.87,
-      "gain_5d": 1.57,
-      "gain_20d": 1.57,
-      "amplitude_20d": 1.9,
-      "tech_reason": "均线多头排列, MACD金叉, 温和放量, 站上5日线, 站上10日线, MA5上行, MA10上行, MA20趋稳, MACD多头, RSI有空间, 流动性充足, 低波动稳健"
-    },
-    {
-      "score": 76,
-      "code": "002441",
-      "name": "众业达",
-      "price": 8.23,
-      "hand_cost": 823.0,
-      "pe": 20.76,
-      "total_mv": 44.82,
-      "fzl": "31.1",
-      "jlr_tzb": "87174234.5",
-      "xjl": "0.4660",
-      "avg_amount_20d": 40745270.0,
-      "ma5": 7.942,
-      "ma10": 7.914,
-      "ma20": 7.957,
-      "ma5_slope": 0.71,
-      "ma10_slope": -1.06,
-      "ma20_slope": 3.24,
-      "bull_align": "否",
       "macd_gold": "是",
       "kdj_gold": "否",
       "vol_expand": "是",
@@ -140,209 +29,355 @@
       "breakout": "是",
       "consecutive_up": "是",
       "on_ma5": "是",
-      "vol_ratio": 2.01,
-      "rsi_14": 61.3,
+      "vol_ratio": 1.26,
+      "rsi_14": 68.1,
       "macd_bull": "多",
       "bb_pos": 1.0,
-      "bias5": 3.63,
-      "gain_1d": 2.24,
-      "gain_5d": 5.38,
-      "gain_20d": 4.84,
-      "amplitude_20d": 2.06,
-      "tech_reason": "MACD金叉, 突破前高, 温和放量, 量能递增, 连续小阳, 站上5日线, 站上10日线, MA5上行, MA20趋稳, MACD多头, RSI有空间, 低波动稳健"
+      "bias5": 4.11,
+      "gain_1d": 3.78,
+      "gain_5d": 8.35,
+      "gain_20d": 8.84,
+      "amplitude_20d": 3.25,
+      "tech_reason": "均线多头排列, MACD金叉, 突破前高, 温和放量, 量能递增, 连续小阳, 站上5日线, 站上10日线, MA5上行, MA10上行, MA20趋稳, MACD多头, 流动性充足"
     },
     {
-      "score": 75,
-      "code": "002228",
-      "name": "合兴包装",
-      "price": 3.21,
-      "hand_cost": 321.0,
-      "pe": 41.25,
-      "total_mv": 38.95,
-      "fzl": "57.4",
-      "jlr_tzb": "36781438.7",
-      "xjl": "0.1825",
-      "avg_amount_20d": 56233720.0,
-      "ma5": 3.154,
-      "ma10": 3.127,
-      "ma20": 3.123,
-      "ma5_slope": 1.74,
-      "ma10_slope": 0.22,
-      "ma20_slope": 3.79,
+      "score": 87,
+      "code": "002054",
+      "name": "德美化工",
+      "price": 7.42,
+      "hand_cost": 742.0,
+      "pe": 21.38,
+      "total_mv": 35.77,
+      "fzl": "57.7",
+      "jlr_tzb": "23480714.9",
+      "xjl": "0.0231",
+      "avg_amount_20d": 72803121.0,
+      "ma5": 7.29,
+      "ma10": 7.271,
+      "ma20": 7.234,
+      "ma5_slope": 0.52,
+      "ma10_slope": 1.03,
+      "ma20_slope": 7.14,
       "bull_align": "是",
-      "macd_gold": "否",
+      "macd_gold": "是",
       "kdj_gold": "否",
       "vol_expand": "否",
       "vol_trend_up": "否",
       "breakout": "是",
       "consecutive_up": "是",
       "on_ma5": "是",
-      "vol_ratio": 0.91,
-      "rsi_14": 58.9,
+      "vol_ratio": 0.95,
+      "rsi_14": 61.2,
       "macd_bull": "多",
       "bb_pos": 1.0,
       "bias5": 1.78,
-      "gain_1d": 0.63,
-      "gain_5d": 3.22,
-      "gain_20d": 5.59,
-      "amplitude_20d": 2.38,
-      "tech_reason": "均线多头排列, 突破前高, 连续小阳, 站上5日线, 站上10日线, MA5上行, MA10上行, MA20趋稳, MACD多头, RSI有空间, 流动性充足, 低波动稳健"
+      "gain_1d": 1.23,
+      "gain_5d": 1.78,
+      "gain_20d": 8.16,
+      "amplitude_20d": 2.35,
+      "tech_reason": "均线多头排列, MACD金叉, 突破前高, 连续小阳, 站上5日线, 站上10日线, MA5上行, MA10上行, MA20趋稳, MACD多头, RSI有空间, 流动性充足, 低波动稳健"
+    },
+    {
+      "score": 82,
+      "code": "600351",
+      "name": "亚宝药业",
+      "price": 7.27,
+      "hand_cost": 727.0,
+      "pe": 15.57,
+      "total_mv": 50.31,
+      "fzl": "22.8",
+      "jlr_tzb": "39985827.3",
+      "xjl": "0.1085",
+      "avg_amount_20d": 226248807.0,
+      "ma5": 7.084,
+      "ma10": 7.068,
+      "ma20": 6.976,
+      "ma5_slope": 0.45,
+      "ma10_slope": 2.67,
+      "ma20_slope": 8.16,
+      "bull_align": "是",
+      "macd_gold": "是",
+      "kdj_gold": "否",
+      "vol_expand": "否",
+      "vol_trend_up": "否",
+      "breakout": "是",
+      "consecutive_up": "是",
+      "on_ma5": "是",
+      "vol_ratio": 0.76,
+      "rsi_14": 63.4,
+      "macd_bull": "多",
+      "bb_pos": 0.97,
+      "bias5": 2.63,
+      "gain_1d": 0.97,
+      "gain_5d": 5.82,
+      "gain_20d": 12.36,
+      "amplitude_20d": 3.33,
+      "tech_reason": "均线多头排列, MACD金叉, 突破前高, 连续小阳, 站上5日线, 站上10日线, MA5上行, MA10上行, MA20趋稳, MACD多头, RSI有空间, 流动性充足"
+    },
+    {
+      "score": 82,
+      "code": "000968",
+      "name": "蓝焰控股",
+      "price": 7.4,
+      "hand_cost": 740.0,
+      "pe": 23.97,
+      "total_mv": 71.6,
+      "fzl": "48.2",
+      "jlr_tzb": "99546908.3",
+      "xjl": "0.0189",
+      "avg_amount_20d": 194802261.0,
+      "ma5": 7.186,
+      "ma10": 7.11,
+      "ma20": 7.061,
+      "ma5_slope": 2.16,
+      "ma10_slope": 1.41,
+      "ma20_slope": 5.59,
+      "bull_align": "是",
+      "macd_gold": "是",
+      "kdj_gold": "否",
+      "vol_expand": "否",
+      "vol_trend_up": "否",
+      "breakout": "是",
+      "consecutive_up": "是",
+      "on_ma5": "是",
+      "vol_ratio": 0.94,
+      "rsi_14": 62.3,
+      "macd_bull": "多",
+      "bb_pos": 1.0,
+      "bias5": 2.98,
+      "gain_1d": 2.21,
+      "gain_5d": 3.21,
+      "gain_20d": 6.32,
+      "amplitude_20d": 3.32,
+      "tech_reason": "均线多头排列, MACD金叉, 突破前高, 连续小阳, 站上5日线, 站上10日线, MA5上行, MA10上行, MA20趋稳, MACD多头, RSI有空间, 流动性充足"
+    },
+    {
+      "score": 82,
+      "code": "603808",
+      "name": "歌力思",
+      "price": 8.82,
+      "hand_cost": 882.0,
+      "pe": 17.79,
+      "total_mv": 32.08,
+      "fzl": "31.0",
+      "jlr_tzb": "243650019.2",
+      "xjl": "0.1308",
+      "avg_amount_20d": 32935837.0,
+      "ma5": 8.598,
+      "ma10": 8.54,
+      "ma20": 8.401,
+      "ma5_slope": 1.37,
+      "ma10_slope": 3.35,
+      "ma20_slope": 11.85,
+      "bull_align": "是",
+      "macd_gold": "是",
+      "kdj_gold": "是",
+      "vol_expand": "是",
+      "vol_trend_up": "否",
+      "breakout": "是",
+      "consecutive_up": "否",
+      "on_ma5": "是",
+      "vol_ratio": 1.34,
+      "rsi_14": 65.5,
+      "macd_bull": "多",
+      "bb_pos": 0.9,
+      "bias5": 2.58,
+      "gain_1d": 4.01,
+      "gain_5d": 4.38,
+      "gain_20d": 12.5,
+      "amplitude_20d": 3.03,
+      "tech_reason": "均线多头排列, MACD金叉, 突破前高, KDJ金叉, 温和放量, 站上5日线, 站上10日线, MA5上行, MA10上行, MA20趋稳, MACD多头"
     }
   ],
   "watchlist": [
     {
+      "code": "600746",
+      "tencent_code": "sh600746",
+      "name": "江苏索普",
+      "price": 7.15,
+      "pe": 34.81
+    },
+    {
+      "code": "2054",
+      "tencent_code": "sz2054",
+      "name": "德美化工",
+      "price": 7.42,
+      "pe": 21.38
+    },
+    {
+      "code": "600351",
+      "tencent_code": "sh600351",
+      "name": "亚宝药业",
+      "price": 7.27,
+      "pe": 15.57
+    },
+    {
+      "code": "968",
+      "tencent_code": "sz968",
+      "name": "蓝焰控股",
+      "price": 7.4,
+      "pe": 23.97
+    },
+    {
+      "code": "603808",
+      "tencent_code": "sh603808",
+      "name": "歌力思",
+      "price": 8.82,
+      "pe": 17.79
+    },
+    {
       "code": "937",
       "tencent_code": "sz937",
       "name": "冀中能源",
-      "price": 5.14,
-      "pe": 37.8
-    },
-    {
-      "code": "2107",
-      "tencent_code": "sz2107",
-      "name": "沃华医药",
-      "price": 6.57,
-      "pe": 31.97
-    },
-    {
-      "code": "88",
-      "tencent_code": "sz88",
-      "name": "盐 田 港",
-      "price": 4.54,
-      "pe": 15.83
-    },
-    {
-      "code": "2441",
-      "tencent_code": "sz2441",
-      "name": "众业达",
-      "price": 8.23,
-      "pe": 20.76
-    },
-    {
-      "code": "2228",
-      "tencent_code": "sz2228",
-      "name": "合兴包装",
-      "price": 3.21,
-      "pe": 41.25
-    },
-    {
-      "code": "576",
-      "tencent_code": "sz576",
-      "name": "甘化科工",
-      "price": 8.0,
-      "pe": 45.01
-    },
-    {
-      "code": "603600",
-      "tencent_code": "sh603600",
-      "name": "永艺股份",
-      "price": 9.96,
-      "pe": 13.88
-    },
-    {
-      "code": "630",
-      "tencent_code": "sh630",
-      "name": "铜陵有色",
-      "price": 6.76,
-      "pe": 22.84
-    },
-    {
-      "code": "600348",
-      "tencent_code": "sh600348",
-      "name": "华阳股份",
-      "price": 9.51,
-      "pe": 17.31
-    },
-    {
-      "code": "655",
-      "tencent_code": "sh655",
-      "name": "金岭矿业",
-      "price": 7.35,
-      "pe": 18.51
+      "price": 5.28,
+      "pe": 38.83
     },
     {
       "code": "2392",
       "tencent_code": "sz2392",
       "name": "北京利尔",
-      "price": 7.79,
-      "pe": 16.34
+      "price": 7.96,
+      "pe": 16.7
     },
     {
-      "code": "600256",
-      "tencent_code": "sh600256",
-      "name": "广汇能源",
-      "price": 6.41,
-      "pe": 23.15
+      "code": "88",
+      "tencent_code": "sz88",
+      "name": "盐 田 港",
+      "price": 4.53,
+      "pe": 15.8
     },
     {
-      "code": "2752",
-      "tencent_code": "sz2752",
-      "name": "昇兴股份",
-      "price": 5.99,
-      "pe": 14.51
+      "code": "2349",
+      "tencent_code": "sz2349",
+      "name": "精华制药",
+      "price": 7.89,
+      "pe": 29.18
     },
     {
-      "code": "2016",
-      "tencent_code": "sz2016",
-      "name": "世荣兆业",
-      "price": 4.65,
-      "pe": 21.37
+      "code": "2228",
+      "tencent_code": "sz2228",
+      "name": "合兴包装",
+      "price": 3.22,
+      "pe": 41.38
     },
     {
-      "code": "2312",
-      "tencent_code": "sz2312",
-      "name": "川发龙蟒",
-      "price": 8.43,
-      "pe": 39.67
+      "code": "2332",
+      "tencent_code": "sz2332",
+      "name": "仙琚制药",
+      "price": 8.73,
+      "pe": 22.38
     },
     {
-      "code": "2328",
-      "tencent_code": "sz2328",
-      "name": "新朋股份",
-      "price": 7.76,
-      "pe": 14.88
+      "code": "601952",
+      "tencent_code": "sh601952",
+      "name": "苏垦农发",
+      "price": 9.39,
+      "pe": 27.04
     },
     {
-      "code": "983",
-      "tencent_code": "sz983",
-      "name": "山西焦煤",
+      "code": "600348",
+      "tencent_code": "sh600348",
+      "name": "华阳股份",
+      "price": 9.36,
+      "pe": 17.04
+    },
+    {
+      "code": "655",
+      "tencent_code": "sh655",
+      "name": "金岭矿业",
       "price": 7.54,
-      "pe": 30.06
+      "pe": 18.99
+    },
+    {
+      "code": "600382",
+      "tencent_code": "sh600382",
+      "name": "广东明珠",
+      "price": 6.6,
+      "pe": 26.74
     },
     {
       "code": "19",
       "tencent_code": "sz19",
       "name": "深粮控股",
-      "price": 7.17,
-      "pe": 46.15
+      "price": 7.31,
+      "pe": 47.05
+    },
+    {
+      "code": "2016",
+      "tencent_code": "sz2016",
+      "name": "世荣兆业",
+      "price": 4.76,
+      "pe": 21.88
+    },
+    {
+      "code": "2363",
+      "tencent_code": "sz2363",
+      "name": "隆基机械",
+      "price": 6.78,
+      "pe": 36.25
+    },
+    {
+      "code": "603689",
+      "tencent_code": "sh603689",
+      "name": "皖天然气",
+      "price": 7.76,
+      "pe": 11.82
+    },
+    {
+      "code": "603817",
+      "tencent_code": "sh603817",
+      "name": "海峡环保",
+      "price": 5.81,
+      "pe": 14.27
     },
     {
       "code": "949",
       "tencent_code": "sz949",
       "name": "新乡化纤",
+      "price": 7.39,
+      "pe": 42.76
+    },
+    {
+      "code": "2286",
+      "tencent_code": "sz2286",
+      "name": "保龄宝",
+      "price": 8.17,
+      "pe": 22.13
+    },
+    {
+      "code": "2752",
+      "tencent_code": "sz2752",
+      "name": "昇兴股份",
+      "price": 6.08,
+      "pe": 14.73
+    },
+    {
+      "code": "2107",
+      "tencent_code": "sz2107",
+      "name": "沃华医药",
       "price": 7.23,
-      "pe": 41.83
+      "pe": 35.19
     },
     {
-      "code": "300701",
-      "tencent_code": "sz300701",
-      "name": "森霸传感",
-      "price": 9.99,
-      "pe": 37.23
+      "code": "576",
+      "tencent_code": "sz576",
+      "name": "甘化科工",
+      "price": 8.11,
+      "pe": 45.63
     },
     {
-      "code": "600195",
-      "tencent_code": "sh600195",
-      "name": "中牧股份",
-      "price": 6.78,
-      "pe": 49.67
+      "code": "603969",
+      "tencent_code": "sh603969",
+      "name": "银龙股份",
+      "price": 7.73,
+      "pe": 15.49
     },
     {
-      "code": "603128",
-      "tencent_code": "sh603128",
-      "name": "华贸物流",
-      "price": 5.61,
-      "pe": 15.24
+      "code": "600299",
+      "tencent_code": "sh600299",
+      "name": "安迪苏",
+      "price": 8.84,
+      "pe": 20.64
     },
     {
       "code": "601388",
@@ -352,172 +387,200 @@
       "pe": 21.6
     },
     {
-      "code": "2478",
-      "tencent_code": "sz2478",
-      "name": "常宝股份",
-      "price": 6.86,
-      "pe": 17.08
+      "code": "600256",
+      "tencent_code": "sh600256",
+      "name": "广汇能源",
+      "price": 6.54,
+      "pe": 23.61
     },
     {
-      "code": "601952",
-      "tencent_code": "sh601952",
-      "name": "苏垦农发",
-      "price": 9.18,
-      "pe": 26.43
+      "code": "2328",
+      "tencent_code": "sz2328",
+      "name": "新朋股份",
+      "price": 7.74,
+      "pe": 14.84
     },
     {
-      "code": "603105",
-      "tencent_code": "sh603105",
-      "name": "芯能科技",
-      "price": 7.88,
-      "pe": 32.96
-    },
-    {
-      "code": "600830",
-      "tencent_code": "sh600830",
-      "name": "香溢融通",
-      "price": 8.45,
-      "pe": 45.17
-    },
-    {
-      "code": "2054",
-      "tencent_code": "sz2054",
-      "name": "德美化工",
-      "price": 7.33,
-      "pe": 21.12
+      "code": "2746",
+      "tencent_code": "sz2746",
+      "name": "仙坛股份",
+      "price": 6.4,
+      "pe": 19.21
     },
     {
       "code": "2004",
       "tencent_code": "sz2004",
       "name": "华邦健康",
-      "price": 4.56,
-      "pe": 14.02
+      "price": 4.54,
+      "pe": 13.96
     },
     {
-      "code": "603817",
-      "tencent_code": "sh603817",
-      "name": "海峡环保",
-      "price": 5.71,
-      "pe": 14.02
+      "code": "603105",
+      "tencent_code": "sh603105",
+      "name": "芯能科技",
+      "price": 7.6,
+      "pe": 31.79
     },
     {
-      "code": "300016",
-      "tencent_code": "sz300016",
-      "name": "北陆药业",
-      "price": 9.35,
-      "pe": 38.16
-    },
-    {
-      "code": "570",
-      "tencent_code": "sz570",
-      "name": "苏常柴Ａ",
-      "price": 5.16,
-      "pe": 44.16
-    },
-    {
-      "code": "2479",
-      "tencent_code": "sz2479",
-      "name": "富春环保",
-      "price": 5.82,
-      "pe": 14.91
-    },
-    {
-      "code": "603500",
-      "tencent_code": "sh603500",
-      "name": "祥和实业",
-      "price": 9.68,
-      "pe": 22.62
-    },
-    {
-      "code": "2454",
-      "tencent_code": "sz2454",
-      "name": "松芝股份",
-      "price": 5.16,
-      "pe": 19.71
-    },
-    {
-      "code": "601008",
-      "tencent_code": "sh601008",
-      "name": "连云港",
-      "price": 4.43,
-      "pe": 28.84
-    },
-    {
-      "code": "2397",
-      "tencent_code": "sz2397",
-      "name": "梦洁股份",
-      "price": 3.6,
-      "pe": 46.64
-    },
-    {
-      "code": "2040",
-      "tencent_code": "sz2040",
-      "name": "南 京 港",
-      "price": 8.64,
-      "pe": 21.3
-    },
-    {
-      "code": "600051",
-      "tencent_code": "sh600051",
-      "name": "宁波联合",
-      "price": 6.32,
-      "pe": 29.04
-    },
-    {
-      "code": "600351",
-      "tencent_code": "sh600351",
-      "name": "亚宝药业",
-      "price": 7.2,
-      "pe": 15.42
-    },
-    {
-      "code": "601002",
-      "tencent_code": "sh601002",
-      "name": "晋亿实业",
-      "price": 5.26,
-      "pe": 15.22
-    },
-    {
-      "code": "601975",
-      "tencent_code": "sh601975",
-      "name": "招商南油",
-      "price": 3.97,
-      "pe": 11.96
+      "code": "600278",
+      "tencent_code": "sh600278",
+      "name": "东方创业",
+      "price": 6.67,
+      "pe": 27.43
     },
     {
       "code": "2632",
       "tencent_code": "sz2632",
       "name": "道明光学",
-      "price": 8.53,
-      "pe": 27.26
+      "price": 8.48,
+      "pe": 27.1
     },
     {
-      "code": "600507",
-      "tencent_code": "sh600507",
-      "name": "方大特钢",
-      "price": 4.27,
-      "pe": 13.25
+      "code": "300016",
+      "tencent_code": "sz300016",
+      "name": "北陆药业",
+      "price": 9.02,
+      "pe": 36.81
+    },
+    {
+      "code": "570",
+      "tencent_code": "sz570",
+      "name": "苏常柴Ａ",
+      "price": 5.24,
+      "pe": 44.84
+    },
+    {
+      "code": "601008",
+      "tencent_code": "sh601008",
+      "name": "连云港",
+      "price": 4.48,
+      "pe": 29.16
+    },
+    {
+      "code": "601890",
+      "tencent_code": "sh601890",
+      "name": "亚星锚链",
+      "price": 8.75,
+      "pe": 23.6
+    },
+    {
+      "code": "603500",
+      "tencent_code": "sh603500",
+      "name": "祥和实业",
+      "price": 9.62,
+      "pe": 22.48
+    },
+    {
+      "code": "630",
+      "tencent_code": "sh630",
+      "name": "铜陵有色",
+      "price": 6.76,
+      "pe": 22.84
+    },
+    {
+      "code": "2040",
+      "tencent_code": "sz2040",
+      "name": "南 京 港",
+      "price": 8.74,
+      "pe": 21.55
+    },
+    {
+      "code": "2397",
+      "tencent_code": "sz2397",
+      "name": "梦洁股份",
+      "price": 3.68,
+      "pe": 47.68
+    },
+    {
+      "code": "2479",
+      "tencent_code": "sz2479",
+      "name": "富春环保",
+      "price": 5.97,
+      "pe": 15.29
+    },
+    {
+      "code": "2166",
+      "tencent_code": "sz2166",
+      "name": "莱茵生物",
+      "price": 6.92,
+      "pe": 33.14
+    },
+    {
+      "code": "2516",
+      "tencent_code": "sz2516",
+      "name": "旷达科技",
+      "price": 5.43,
+      "pe": 36.41
+    },
+    {
+      "code": "2312",
+      "tencent_code": "sz2312",
+      "name": "川发龙蟒",
+      "price": 8.65,
+      "pe": 40.71
+    },
+    {
+      "code": "601975",
+      "tencent_code": "sh601975",
+      "name": "招商南油",
+      "price": 4.16,
+      "pe": 12.53
+    },
+    {
+      "code": "601002",
+      "tencent_code": "sh601002",
+      "name": "晋亿实业",
+      "price": 5.29,
+      "pe": 15.31
+    },
+    {
+      "code": "2478",
+      "tencent_code": "sz2478",
+      "name": "常宝股份",
+      "price": 6.84,
+      "pe": 17.03
+    },
+    {
+      "code": "600830",
+      "tencent_code": "sh600830",
+      "name": "香溢融通",
+      "price": 8.4,
+      "pe": 44.91
     },
     {
       "code": "600361",
       "tencent_code": "sh600361",
       "name": "创新新材",
-      "price": 3.7,
-      "pe": 16.7
+      "price": 3.75,
+      "pe": 16.93
     },
     {
-      "code": "603969",
-      "tencent_code": "sh603969",
-      "name": "银龙股份",
-      "price": 7.57,
-      "pe": 15.17
+      "code": "2441",
+      "tencent_code": "sz2441",
+      "name": "众业达",
+      "price": 8.26,
+      "pe": 20.83
     },
     {
-      "code": "968",
-      "tencent_code": "sz968",
-      "name": "蓝焰控股",
-      "price": 7.24,
-      "pe": 23.45
+      "code": "600507",
+      "tencent_code": "sh600507",
+      "name": "方大特钢",
+      "price": 4.3,
+      "pe": 13.34
+    },
+    {
+      "code": "983",
+      "tencent_code": "sz983",
+      "name": "山西焦煤",
+      "price": 7.42,
+      "pe": 29.58
+    },
+    {
+      "code": "601969",
+      "tencent_code": "sh601969",
+      "name": "海南矿业",
+      "price": 9.77,
+      "pe": 29.16
     },
     {
       "code": "600720",
@@ -530,246 +593,232 @@
       "code": "300121",
       "tencent_code": "sz300121",
       "name": "阳谷华泰",
-      "price": 9.87,
-      "pe": 22.56
-    },
-    {
-      "code": "2166",
-      "tencent_code": "sz2166",
-      "name": "莱茵生物",
-      "price": 6.9,
-      "pe": 33.05
-    },
-    {
-      "code": "2349",
-      "tencent_code": "sz2349",
-      "name": "精华制药",
-      "price": 7.17,
-      "pe": 26.51
-    },
-    {
-      "code": "153",
-      "tencent_code": "sz153",
-      "name": "丰原药业",
-      "price": 6.45,
-      "pe": 31.74
-    },
-    {
-      "code": "600572",
-      "tencent_code": "sh600572",
-      "name": "康恩贝",
-      "price": 4.51,
-      "pe": 22.97
-    },
-    {
-      "code": "300009",
-      "tencent_code": "sz300009",
-      "name": "安科生物",
-      "price": 8.8,
-      "pe": 20.97
-    },
-    {
-      "code": "2570",
-      "tencent_code": "sz2570",
-      "name": "贝因美",
-      "price": 4.54,
-      "pe": 32.38
-    },
-    {
-      "code": "603518",
-      "tencent_code": "sh603518",
-      "name": "锦泓集团",
-      "price": 8.02,
-      "pe": 10.71
-    },
-    {
-      "code": "601890",
-      "tencent_code": "sh601890",
-      "name": "亚星锚链",
-      "price": 8.74,
-      "pe": 23.58
-    },
-    {
-      "code": "690",
-      "tencent_code": "sh690",
-      "name": "宝新能源",
-      "price": 4.91,
-      "pe": 9.72
-    },
-    {
-      "code": "300303",
-      "tencent_code": "sz300303",
-      "name": "聚飞光电",
-      "price": 7.21,
-      "pe": 35.79
-    },
-    {
-      "code": "601968",
-      "tencent_code": "sh601968",
-      "name": "宝钢包装",
-      "price": 4.56,
-      "pe": 25.39
-    },
-    {
-      "code": "600063",
-      "tencent_code": "sh600063",
-      "name": "皖维高新",
-      "price": 5.84,
-      "pe": 24.59
-    },
-    {
-      "code": "600746",
-      "tencent_code": "sh600746",
-      "name": "江苏索普",
-      "price": 6.88,
-      "pe": 33.49
-    },
-    {
-      "code": "603980",
-      "tencent_code": "sh603980",
-      "name": "吉华集团",
-      "price": 6.82,
-      "pe": 47.59
-    },
-    {
-      "code": "603866",
-      "tencent_code": "sh603866",
-      "name": "桃李面包",
-      "price": 4.3,
-      "pe": 30.54
-    },
-    {
-      "code": "300320",
-      "tencent_code": "sz300320",
-      "name": "海达股份",
-      "price": 8.44,
-      "pe": 19.8
-    },
-    {
-      "code": "300708",
-      "tencent_code": "sz300708",
-      "name": "聚灿光电",
-      "price": 7.98,
-      "pe": 45.6
-    },
-    {
-      "code": "601600",
-      "tencent_code": "sh601600",
-      "name": "中国铝业",
-      "price": 9.65,
-      "pe": 9.47
-    },
-    {
-      "code": "810",
-      "tencent_code": "sz810",
-      "name": "创维数字",
-      "price": 9.74,
-      "pe": 38.85
+      "price": 9.86,
+      "pe": 22.54
     },
     {
       "code": "2588",
       "tencent_code": "sz2588",
       "name": "史丹利",
-      "price": 7.95,
-      "pe": 9.43
-    },
-    {
-      "code": "2332",
-      "tencent_code": "sz2332",
-      "name": "仙琚制药",
-      "price": 8.62,
-      "pe": 22.09
-    },
-    {
-      "code": "589",
-      "tencent_code": "sz589",
-      "name": "贵州轮胎",
-      "price": 4.33,
-      "pe": 9.17
-    },
-    {
-      "code": "2108",
-      "tencent_code": "sz2108",
-      "name": "沧州明珠",
-      "price": 4.45,
-      "pe": 36.26
-    },
-    {
-      "code": "600863",
-      "tencent_code": "sh600863",
-      "name": "华能蒙电",
-      "price": 4.72,
-      "pe": 17.91
-    },
-    {
-      "code": "600382",
-      "tencent_code": "sh600382",
-      "name": "广东明珠",
-      "price": 6.43,
-      "pe": 26.05
-    },
-    {
-      "code": "600299",
-      "tencent_code": "sh600299",
-      "name": "安迪苏",
-      "price": 8.62,
-      "pe": 20.12
-    },
-    {
-      "code": "600125",
-      "tencent_code": "sh600125",
-      "name": "铁龙物流",
-      "price": 5.45,
-      "pe": 13.38
-    },
-    {
-      "code": "603966",
-      "tencent_code": "sh603966",
-      "name": "法兰泰克",
-      "price": 7.96,
-      "pe": 16.28
-    },
-    {
-      "code": "603027",
-      "tencent_code": "sh603027",
-      "name": "千禾味业",
-      "price": 7.24,
-      "pe": 28.75
-    },
-    {
-      "code": "601500",
-      "tencent_code": "sh601500",
-      "name": "通用股份",
-      "price": 3.95,
-      "pe": 22.72
+      "price": 8.16,
+      "pe": 9.68
     },
     {
       "code": "601678",
       "tencent_code": "sh601678",
       "name": "滨化股份",
-      "price": 6.48,
-      "pe": 34.13
-    },
-    {
-      "code": "600867",
-      "tencent_code": "sh600867",
-      "name": "通化东宝",
-      "price": 8.16,
-      "pe": 12.3
+      "price": 6.83,
+      "pe": 35.97
     },
     {
       "code": "600273",
       "tencent_code": "sh600273",
       "name": "嘉化能源",
-      "price": 6.64,
-      "pe": 13.91
+      "price": 6.85,
+      "pe": 14.35
+    },
+    {
+      "code": "300009",
+      "tencent_code": "sz300009",
+      "name": "安科生物",
+      "price": 8.53,
+      "pe": 20.33
+    },
+    {
+      "code": "600572",
+      "tencent_code": "sh600572",
+      "name": "康恩贝",
+      "price": 4.5,
+      "pe": 22.91
+    },
+    {
+      "code": "2570",
+      "tencent_code": "sz2570",
+      "name": "贝因美",
+      "price": 4.6,
+      "pe": 32.81
+    },
+    {
+      "code": "300441",
+      "tencent_code": "sz300441",
+      "name": "鲍斯股份",
+      "price": 6.99,
+      "pe": 25.36
+    },
+    {
+      "code": "603089",
+      "tencent_code": "sh603089",
+      "name": "正裕工业",
+      "price": 9.99,
+      "pe": 48.03
+    },
+    {
+      "code": "300200",
+      "tencent_code": "sz300200",
+      "name": "高盟新材",
+      "price": 8.62,
+      "pe": 46.63
+    },
+    {
+      "code": "600867",
+      "tencent_code": "sh600867",
+      "name": "通化东宝",
+      "price": 8.18,
+      "pe": 12.33
+    },
+    {
+      "code": "601968",
+      "tencent_code": "sh601968",
+      "name": "宝钢包装",
+      "price": 4.63,
+      "pe": 25.78
+    },
+    {
+      "code": "690",
+      "tencent_code": "sh690",
+      "name": "宝新能源",
+      "price": 4.9,
+      "pe": 9.7
+    },
+    {
+      "code": "600063",
+      "tencent_code": "sh600063",
+      "name": "皖维高新",
+      "price": 5.94,
+      "pe": 25.01
+    },
+    {
+      "code": "600731",
+      "tencent_code": "sh600731",
+      "name": "湖南海利",
+      "price": 5.94,
+      "pe": 18.37
+    },
+    {
+      "code": "600163",
+      "tencent_code": "sh600163",
+      "name": "中闽能源",
+      "price": 5.24,
+      "pe": 20.17
+    },
+    {
+      "code": "601600",
+      "tencent_code": "sh601600",
+      "name": "中国铝业",
+      "price": 9.82,
+      "pe": 9.64
     },
     {
       "code": "2267",
       "tencent_code": "sz2267",
       "name": "陕天然气",
-      "price": 6.9,
-      "pe": 16.03
+      "price": 7.03,
+      "pe": 16.33
+    },
+    {
+      "code": "810",
+      "tencent_code": "sz810",
+      "name": "创维数字",
+      "price": 9.73,
+      "pe": 38.81
+    },
+    {
+      "code": "589",
+      "tencent_code": "sz589",
+      "name": "贵州轮胎",
+      "price": 4.37,
+      "pe": 9.25
+    },
+    {
+      "code": "2406",
+      "tencent_code": "sz2406",
+      "name": "远东传动",
+      "price": 6.78,
+      "pe": 24.5
+    },
+    {
+      "code": "2108",
+      "tencent_code": "sz2108",
+      "name": "沧州明珠",
+      "price": 4.46,
+      "pe": 36.34
+    },
+    {
+      "code": "600863",
+      "tencent_code": "sh600863",
+      "name": "华能蒙电",
+      "price": 4.68,
+      "pe": 17.76
+    },
+    {
+      "code": "603980",
+      "tencent_code": "sh603980",
+      "name": "吉华集团",
+      "price": 7.11,
+      "pe": 49.61
+    },
+    {
+      "code": "600125",
+      "tencent_code": "sh600125",
+      "name": "铁龙物流",
+      "price": 5.5,
+      "pe": 13.5
+    },
+    {
+      "code": "603027",
+      "tencent_code": "sh603027",
+      "name": "千禾味业",
+      "price": 7.32,
+      "pe": 29.07
+    },
+    {
+      "code": "603518",
+      "tencent_code": "sh603518",
+      "name": "锦泓集团",
+      "price": 8.09,
+      "pe": 10.81
+    },
+    {
+      "code": "601500",
+      "tencent_code": "sh601500",
+      "name": "通用股份",
+      "price": 4.01,
+      "pe": 23.06
+    },
+    {
+      "code": "300403",
+      "tencent_code": "sz300403",
+      "name": "汉宇集团",
+      "price": 9.44,
+      "pe": 27.37
+    },
+    {
+      "code": "2264",
+      "tencent_code": "sz2264",
+      "name": "新 华 都",
+      "price": 6.71,
+      "pe": 30.16
+    },
+    {
+      "code": "600873",
+      "tencent_code": "sh600873",
+      "name": "梅花生物",
+      "price": 7.9,
+      "pe": 10.19
+    },
+    {
+      "code": "2749",
+      "tencent_code": "sz2749",
+      "name": "国光股份",
+      "price": 8.75,
+      "pe": 18.36
+    },
+    {
+      "code": "2763",
+      "tencent_code": "sz2763",
+      "name": "汇洁股份",
+      "price": 7.65,
+      "pe": 43.06
     },
     {
       "code": "300043",
@@ -779,200 +828,144 @@
       "pe": 13.87
     },
     {
-      "code": "2746",
-      "tencent_code": "sz2746",
-      "name": "仙坛股份",
-      "price": 6.4,
-      "pe": 19.21
+      "code": "30",
+      "tencent_code": "sz30",
+      "name": "富奥股份",
+      "price": 4.06,
+      "pe": 11.9
     },
     {
       "code": "2540",
       "tencent_code": "sz2540",
       "name": "亚太科技",
-      "price": 5.12,
-      "pe": 21.45
-    },
-    {
-      "code": "601000",
-      "tencent_code": "sh601000",
-      "name": "唐山港",
-      "price": 4.52,
-      "pe": 12.62
-    },
-    {
-      "code": "300039",
-      "tencent_code": "sz300039",
-      "name": "上海凯宝",
-      "price": 5.97,
-      "pe": 24.15
-    },
-    {
-      "code": "300200",
-      "tencent_code": "sz300200",
-      "name": "高盟新材",
-      "price": 8.59,
-      "pe": 46.47
-    },
-    {
-      "code": "2887",
-      "tencent_code": "sz2887",
-      "name": "绿茵生态",
-      "price": 9.71,
-      "pe": 27.89
-    },
-    {
-      "code": "600873",
-      "tencent_code": "sh600873",
-      "name": "梅花生物",
-      "price": 7.79,
-      "pe": 10.04
-    },
-    {
-      "code": "2662",
-      "tencent_code": "sz2662",
-      "name": "峰璟股份",
-      "price": 3.27,
-      "pe": 29.94
-    },
-    {
-      "code": "2950",
-      "tencent_code": "sz2950",
-      "name": "奥美医疗",
-      "price": 9.13,
-      "pe": 23.84
-    },
-    {
-      "code": "2406",
-      "tencent_code": "sz2406",
-      "name": "远东传动",
-      "price": 6.74,
-      "pe": 24.36
-    },
-    {
-      "code": "725",
-      "tencent_code": "sz725",
-      "name": "京东方Ａ",
-      "price": 5.94,
-      "pe": 36.98
-    },
-    {
-      "code": "2429",
-      "tencent_code": "sz2429",
-      "name": "兆驰股份",
-      "price": 8.38,
-      "pe": 36.72
-    },
-    {
-      "code": "2286",
-      "tencent_code": "sz2286",
-      "name": "保龄宝",
-      "price": 8.0,
-      "pe": 21.67
-    },
-    {
-      "code": "600219",
-      "tencent_code": "sh600219",
-      "name": "南山铝业",
-      "price": 4.83,
-      "pe": 12.73
-    },
-    {
-      "code": "601199",
-      "tencent_code": "sh601199",
-      "name": "江南水务",
-      "price": 6.23,
-      "pe": 16.48
-    },
-    {
-      "code": "600101",
-      "tencent_code": "sh600101",
-      "name": "明星电力",
-      "price": 7.92,
-      "pe": 26.54
-    },
-    {
-      "code": "300453",
-      "tencent_code": "sz300453",
-      "name": "三鑫医疗",
-      "price": 9.71,
-      "pe": 17.98
-    },
-    {
-      "code": "600866",
-      "tencent_code": "sh600866",
-      "name": "星湖科技",
-      "price": 4.36,
-      "pe": 33.96
-    },
-    {
-      "code": "603066",
-      "tencent_code": "sh603066",
-      "name": "音飞储存",
-      "price": 9.03,
-      "pe": 23.88
-    },
-    {
-      "code": "603811",
-      "tencent_code": "sh603811",
-      "name": "诚意药业",
-      "price": 7.36,
-      "pe": 18.99
+      "price": 5.18,
+      "pe": 21.7
     },
     {
       "code": "603058",
       "tencent_code": "sh603058",
       "name": "永吉股份",
-      "price": 9.27,
-      "pe": 35.75
+      "price": 9.4,
+      "pe": 36.25
+    },
+    {
+      "code": "300039",
+      "tencent_code": "sz300039",
+      "name": "上海凯宝",
+      "price": 5.71,
+      "pe": 23.1
+    },
+    {
+      "code": "2662",
+      "tencent_code": "sz2662",
+      "name": "峰璟股份",
+      "price": 3.37,
+      "pe": 30.86
+    },
+    {
+      "code": "300708",
+      "tencent_code": "sz300708",
+      "name": "聚灿光电",
+      "price": 8.0,
+      "pe": 45.71
+    },
+    {
+      "code": "725",
+      "tencent_code": "sz725",
+      "name": "京东方Ａ",
+      "price": 5.93,
+      "pe": 36.92
+    },
+    {
+      "code": "2950",
+      "tencent_code": "sz2950",
+      "name": "奥美医疗",
+      "price": 9.26,
+      "pe": 24.17
+    },
+    {
+      "code": "300824",
+      "tencent_code": "sz300824",
+      "name": "北鼎股份",
+      "price": 7.83,
+      "pe": 24.26
+    },
+    {
+      "code": "2429",
+      "tencent_code": "sz2429",
+      "name": "兆驰股份",
+      "price": 8.19,
+      "pe": 35.89
+    },
+    {
+      "code": "726",
+      "tencent_code": "sz726",
+      "name": "鲁  泰Ａ",
+      "price": 6.02,
+      "pe": 9.13
+    },
+    {
+      "code": "600219",
+      "tencent_code": "sh600219",
+      "name": "南山铝业",
+      "price": 4.87,
+      "pe": 12.83
+    },
+    {
+      "code": "600101",
+      "tencent_code": "sh600101",
+      "name": "明星电力",
+      "price": 7.9,
+      "pe": 26.47
+    },
+    {
+      "code": "300453",
+      "tencent_code": "sz300453",
+      "name": "三鑫医疗",
+      "price": 9.65,
+      "pe": 17.87
+    },
+    {
+      "code": "603066",
+      "tencent_code": "sh603066",
+      "name": "音飞储存",
+      "price": 9.14,
+      "pe": 24.17
+    },
+    {
+      "code": "600866",
+      "tencent_code": "sh600866",
+      "name": "星湖科技",
+      "price": 4.41,
+      "pe": 34.35
+    },
+    {
+      "code": "153",
+      "tencent_code": "sz153",
+      "name": "丰原药业",
+      "price": 6.45,
+      "pe": 31.74
     },
     {
       "code": "989",
       "tencent_code": "sz989",
       "name": "九芝堂",
-      "price": 9.14,
-      "pe": 23.78
+      "price": 9.16,
+      "pe": 23.83
     },
     {
       "code": "2498",
       "tencent_code": "sz2498",
       "name": "汉缆股份",
-      "price": 6.43,
-      "pe": 37.47
+      "price": 6.46,
+      "pe": 37.65
     },
     {
       "code": "2075",
       "tencent_code": "sz2075",
       "name": "沙钢股份",
-      "price": 3.71,
-      "pe": 32.7
-    },
-    {
-      "code": "600120",
-      "tencent_code": "sh600120",
-      "name": "浙江东方",
-      "price": 4.95,
-      "pe": 12.04
-    },
-    {
-      "code": "600575",
-      "tencent_code": "sh600575",
-      "name": "淮河能源",
-      "price": 3.31,
-      "pe": 17.04
-    },
-    {
-      "code": "600469",
-      "tencent_code": "sh600469",
-      "name": "风神股份",
-      "price": 5.22,
-      "pe": 17.99
-    },
-    {
-      "code": "2511",
-      "tencent_code": "sz2511",
-      "name": "中顺洁柔",
-      "price": 7.08,
-      "pe": 23.03
+      "price": 3.75,
+      "pe": 33.05
     },
     {
       "code": "300132",
@@ -982,74 +975,102 @@
       "pe": 18.24
     },
     {
-      "code": "300403",
-      "tencent_code": "sz300403",
-      "name": "汉宇集团",
-      "price": 9.29,
-      "pe": 26.94
+      "code": "600469",
+      "tencent_code": "sh600469",
+      "name": "风神股份",
+      "price": 5.38,
+      "pe": 18.54
     },
     {
-      "code": "2283",
-      "tencent_code": "sz2283",
-      "name": "天润工业",
-      "price": 8.59,
-      "pe": 22.18
+      "code": "600120",
+      "tencent_code": "sh600120",
+      "name": "浙江东方",
+      "price": 4.94,
+      "pe": 12.01
     },
     {
-      "code": "2303",
-      "tencent_code": "sz2303",
-      "name": "美盈森",
-      "price": 5.08,
-      "pe": 36.23
+      "code": "600575",
+      "tencent_code": "sh600575",
+      "name": "淮河能源",
+      "price": 3.37,
+      "pe": 17.35
     },
     {
-      "code": "2264",
-      "tencent_code": "sz2264",
-      "name": "新 华 都",
-      "price": 6.52,
-      "pe": 29.31
+      "code": "603218",
+      "tencent_code": "sh603218",
+      "name": "日月股份",
+      "price": 9.57,
+      "pe": 22.81
     },
     {
       "code": "601566",
       "tencent_code": "sh601566",
       "name": "九牧王",
-      "price": 8.37,
-      "pe": 30.07
+      "price": 8.39,
+      "pe": 30.14
     },
     {
-      "code": "899",
-      "tencent_code": "sz899",
-      "name": "赣能股份",
-      "price": 9.68,
-      "pe": 11.35
+      "code": "300303",
+      "tencent_code": "sz300303",
+      "name": "聚飞光电",
+      "price": 7.2,
+      "pe": 35.74
+    },
+    {
+      "code": "2283",
+      "tencent_code": "sz2283",
+      "name": "天润工业",
+      "price": 8.55,
+      "pe": 22.08
+    },
+    {
+      "code": "603811",
+      "tencent_code": "sh603811",
+      "name": "诚意药业",
+      "price": 7.31,
+      "pe": 18.86
+    },
+    {
+      "code": "157",
+      "tencent_code": "sz157",
+      "name": "中联重科",
+      "price": 6.82,
+      "pe": 14.06
     },
     {
       "code": "2255",
       "tencent_code": "sz2255",
       "name": "海陆重工",
-      "price": 7.84,
-      "pe": 16.86
+      "price": 7.93,
+      "pe": 17.05
     },
     {
-      "code": "2458",
-      "tencent_code": "sz2458",
-      "name": "益生股份",
-      "price": 8.94,
-      "pe": 27.41
+      "code": "2303",
+      "tencent_code": "sz2303",
+      "name": "美盈森",
+      "price": 5.18,
+      "pe": 36.94
     },
     {
       "code": "2404",
       "tencent_code": "sz2404",
       "name": "嘉欣丝绸",
-      "price": 5.74,
-      "pe": 19.0
+      "price": 5.84,
+      "pe": 19.33
     },
     {
-      "code": "600380",
-      "tencent_code": "sh600380",
-      "name": "健康元",
-      "price": 9.28,
-      "pe": 14.17
+      "code": "2458",
+      "tencent_code": "sz2458",
+      "name": "益生股份",
+      "price": 9.06,
+      "pe": 27.77
+    },
+    {
+      "code": "2887",
+      "tencent_code": "sz2887",
+      "name": "绿茵生态",
+      "price": 9.54,
+      "pe": 27.4
     }
   ]
 }
