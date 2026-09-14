@@ -1,10 +1,6 @@
 name: A股选股筛选
 
 on:
-  schedule:
-    # 尾盘选股兜底：UTC 07:30 (周一-周五) = CST 15:30（收盘后数据完整）
-    # 主力靠 cron-job.org 在 CST 14:50 外部触发 workflow_dispatch（准时），此 schedule 仅兜底
-    - cron: '30 7 * * 1-5'
   workflow_dispatch:
     inputs:
       mode:
